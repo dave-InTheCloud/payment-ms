@@ -31,3 +31,12 @@ management:
   endpoint:
     health:
       show-details: always
+
+springdoc:
+  enable-native-support: true
+  swagger-ui:
+    path: /swagger-ui
+
+logging:
+  level:
+    root: INFO
