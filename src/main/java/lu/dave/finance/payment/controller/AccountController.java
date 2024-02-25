@@ -1,10 +1,10 @@
-package lu.dave.finance.payment.paymentMs.controller;
+package lu.dave.finance.payment.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class PayementController {
+public class AccountController {
 
     @GetMapping("/")
     String home() {

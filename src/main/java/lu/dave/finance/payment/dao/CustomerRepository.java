@@ -1,0 +1,14 @@
+package lu.dave.finance.payment.dao;
+
+import lu.dave.finance.payment.entity.CustomerEntity;
+import org.springframework.data.repository.ListCrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CustomerRepository extends PagingAndSortingRepository<CustomerEntity, Long>
+        , ListCrudRepository<CustomerEntity, Long> {
+
+    // Add additional custom query methods here if needed
+
+}
