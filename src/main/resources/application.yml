@@ -22,6 +22,10 @@ spring:
     user: spaceFan
     password: spaceFan
     #enabled: false
+  asciidoctor:
+    enabled: true
+    source-docs: src/main/asciidoc
+    backend: html
 
 management:
   endpoints:
