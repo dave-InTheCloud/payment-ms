@@ -16,18 +16,18 @@ public class CustomerController {
 
     private final CustomerService customerServiceImpl;
 
-    @GetMapping({ "", "/" })
+    @GetMapping("")
     public List<CustomerEntity> getAll() {
         return customerServiceImpl.findAll();
     }
 
-    @GetMapping({ "/{id}", "/{id}/" })
+    @GetMapping("/{id}")
     public CustomerEntity getById(@PathVariable Long id) {
         return customerServiceImpl.findById(id);
     }
 
 
-    @PostMapping({ "", "/" })
+    @PostMapping("")
     public CustomerEntity create(@Valid @RequestBody CustomerDto customerDto) {
         return customerServiceImpl.save(customerDto);
     }
