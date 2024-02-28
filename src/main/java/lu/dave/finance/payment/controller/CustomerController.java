@@ -1,12 +1,11 @@
 package lu.dave.finance.payment.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lu.dave.finance.payment.dto.CustomerDto;
 import lu.dave.finance.payment.entity.CustomerEntity;
 import lu.dave.finance.payment.service.CustomerService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,4 +25,12 @@ public class CustomerController {
     public CustomerEntity getById(@PathVariable Long id) {
         return customerServiceImpl.findById(id);
     }
+
+
+    @PostMapping({ "", "/" })
+    public CustomerEntity create(@Valid @RequestBody CustomerDto customerDto) {
+        return customerServiceImpl.save(customerDto);
+    }
+
+
 }

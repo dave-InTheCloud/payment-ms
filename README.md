@@ -7,14 +7,6 @@ http://localhost:8080/swagger-ui
 
 ## Compilation
 
-Docker native image : 
-```bash
-# Docker need to be running
-mvn clean install -U
-mvn clean package -Pnative
-mvn -Pnative spring-boot:build-image
-```
-
 Local Native image :
 
 ```bash
@@ -26,4 +18,13 @@ sdk use java 22.3.r17-nik
 mvn clean install -U
 mvn clean package -Pnative
 mvn -Pnative native:compile 
+```
+
+
+Docker native image :
+```bash
+# Docker need to be running
+mvn clean install -U
+mvn clean package -Pnative
+mvn -Pnative spring-boot:build-image
 ```

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `CUSTOMER` (
     `ID` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `NAME` varchar(20)  NOT NULL,
+    `NAME` varchar(30)  NOT NULL,
     `EMAIL` varchar(50)  NOT NULL,
     `DATE_OF_BIRTH` timestamp  NOT NULL,
     `CREATED_ON` timestamp  NOT NULL,
