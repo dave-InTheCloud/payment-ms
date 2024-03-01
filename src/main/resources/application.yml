@@ -13,7 +13,8 @@ spring:
     password: spaceFan
     driverClassName: org.h2.Driver
   jpa:
-    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       # as we use flyway we disable automatic creation (otherwise ddl auto is post flyway)
       ddl-auto: none

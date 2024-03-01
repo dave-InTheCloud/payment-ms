@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,15 +19,19 @@ public class ErrorController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, List<String>>> handleValidationErrors(MethodArgumentNotValidException ex) {
-        List<String> errors = ex.getBindingResult().getFieldErrors()
-                .stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
-        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        Map<String, List<String>> errorResponse = new HashMap<>();
+
+        // Get field errors and their corresponding messages
+        ex.getBindingResult().getFieldErrors().forEach(fieldError -> {
+            String fieldName = fieldError.getField();
+            String errorMessage = fieldError.getDefaultMessage();
+
+            // Add errors to the map, grouping them by field name
+            errorResponse.computeIfAbsent(fieldName, k -> new ArrayList<>()).add(errorMessage);
+        });
+
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    private Map<String, List<String>> getErrorsMap(List<String> errors) {
-        Map<String, List<String>> errorResponse = new HashMap<>();
-        errorResponse.put("errors", errors);
-        return errorResponse;
-    }
 
 }
