@@ -9,8 +9,10 @@ public interface CustomerService {
 
     List<CustomerEntity> findAll();
 
+    CustomerDto getById(Long id);
+
     CustomerEntity findById(Long id);
 
 
-    CustomerEntity save(CustomerDto customerDto);
+    CustomerDto save(CustomerDto customerDto);
 }

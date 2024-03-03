@@ -1,15 +1,13 @@
 package lu.dave.finance.payment.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.ToString;
+import lu.dave.finance.payment.entity.enumaration.AccountType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -21,14 +19,11 @@ public class AccountEntity {
     @SequenceGenerator(name = "CUSTOMER_SEQ_GEN", sequenceName = "CUSTOMER_SEQ", allocationSize = 1)
     private Long id;
 
-    //@ManyToOne
-    //@JoinColumn(name = "USER_ID")
-    // private CustomerEntity user;
-
-    //@Enumerated(EnumType.STRING)
-    //private AmountType balanceType;
     @Column(name = "NAME")
     private String name;
+
+    @Column(name = "SERIAL_NUMBER")
+    private String serialNumber;
 
     @Column(name = "CURRENCY_CODE")
     private String currencyCode;
@@ -36,9 +31,20 @@ public class AccountEntity {
     @Column(name = "BALANCE")
     private Double balance;
 
+    @Column(name = "ACCOUNT_TYPE")
+    @Enumerated(EnumType.STRING)
+    private AccountType type;
+
     @OneToOne
     @JoinColumn(name = "OWNER_ID")
     private CustomerEntity customer;
+
+//    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<MovementEntity> fromMovements;
+//
+//    @OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<MovementEntity> toMovements;
+
 
     @OneToMany(mappedBy = "account")
     private List<ContributorEntity> contributors;

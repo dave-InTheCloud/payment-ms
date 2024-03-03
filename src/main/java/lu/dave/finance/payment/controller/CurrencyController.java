@@ -17,7 +17,7 @@ public class CurrencyController {
     @Operation(summary = "Default operation", description = "This operation describes your endpoint")
     @GetMapping({"/", ""})
     public double convert(){
-        return exchangeServiceImpl.convertAmount("USD", 1300.00, "EUR");
+        return exchangeServiceImpl.convertAmount("USD", "EUR", 1300.00);
     }
 
 }

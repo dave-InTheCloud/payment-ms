@@ -1,21 +1,29 @@
 package lu.dave.finance.payment.dto;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lu.dave.finance.payment.entity.enumaration.AccountType;
 
 @Data
 public class AccountDto {
 
     private Long id;
 
-    @NotBlank(message = "Your Account needs a name.")
     @Size(min = 3, max = 30)
     private String name;
 
+    // IBAN not ok for US
+    //@Pattern(regexp = "^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,32}$")
+    @Size(min = 5, max = 50)
+    private String serialNumber;
+
+    @Enumerated(EnumType.STRING)
+    private AccountType type;
+
     @NotNull(message = "Your Account needs a owner id.")
-   // @Min(1)
     @Min(value = 1L)
     private Long ownerId;
 
@@ -23,6 +31,7 @@ public class AccountDto {
     @Size(min = 3, max = 3)
     private String currencyCode;
 
-    @DecimalMin("0.0")
-    private Double balance = 0.0;
+    @NotNull
+    @DecimalMin("0.01")
+    private Double balance;
 }

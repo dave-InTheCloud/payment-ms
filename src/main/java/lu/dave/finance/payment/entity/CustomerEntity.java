@@ -7,8 +7,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -26,8 +24,10 @@ public class CustomerEntity {
 
     private LocalDate dateOfBirth;
 
-    @OneToMany(mappedBy = "contributor")
-    private List<ContributorEntity> accounts;
+    /**
+     * @OneToMany(mappedBy = "contributor")
+     * private List<ContributorEntity> accounts;
+     **/
 
     @CreationTimestamp
     @Column(name = "CREATED_ON")

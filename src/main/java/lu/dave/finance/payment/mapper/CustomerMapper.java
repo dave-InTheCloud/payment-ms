@@ -11,4 +11,6 @@ public interface CustomerMapper  extends Converter<CustomerDto, CustomerEntity> 
     @Override
     CustomerEntity convert( CustomerDto customerDto);
 
+    CustomerDto convert(CustomerEntity customerEntity);
+
 }

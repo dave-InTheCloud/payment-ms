@@ -78,6 +78,13 @@
             <version>2.0.2</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.iban4j/iban4j -->
+        <dependency>
+            <groupId>org.iban4j</groupId>
+            <artifactId>iban4j</artifactId>
+            <version>3.2.7-RELEASE</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.javamoney/moneta -->
         <dependency>
             <groupId>org.javamoney</groupId>
@@ -311,6 +318,7 @@
                             <version>${org.mapstruct.extensions.spring.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                    <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
             </plugin>
 

@@ -14,14 +14,18 @@ import java.time.LocalDateTime;
 public class MovementEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movementSeq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MOVEMENT_SEQ_GEN")
+    @SequenceGenerator(name = "MOVEMENT_SEQ_GEN", sequenceName = "MOVEMENT_SEQ", allocationSize = 1)
     private Long id;
 
-    private Long userId;
+    private Long customerId;
+    @ManyToOne
+    @JoinColumn(name = "from_account_id")
+    private AccountEntity fromAccount;
 
-    private Long fromAccountId;
-
-    private  Long toAccountId;
+    @ManyToOne
+    @JoinColumn(name = "to_account_id")
+    private AccountEntity toAccount;
 
     private Double amount;
 

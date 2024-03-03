@@ -1,10 +1,14 @@
 package lu.dave.finance.payment.service;
 
 import lombok.AllArgsConstructor;
+import lu.dave.finance.payment.exception.BadParameterException;
+import lu.dave.finance.payment.exception.ServiceUnvailableException;
 import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Service;
 
-import javax.money.*;
+import javax.money.Monetary;
+import javax.money.MonetaryAmount;
+import javax.money.MonetaryException;
 import javax.money.convert.CurrencyConversion;
 import javax.money.convert.ExchangeRateProvider;
 import javax.money.convert.MonetaryConversions;
@@ -13,29 +17,27 @@ import javax.money.convert.MonetaryConversions;
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
 
-    public CurrencyConversion getCurrencyRate(String currency) {
+    public CurrencyConversion getCurrencyRate(final String currency) {
         try {
             ExchangeRateProvider rateProvider = MonetaryConversions.getExchangeRateProvider("ECB-HIST", "ECB-HIST90", "ECB");
             CurrencyConversion conversion = rateProvider.getCurrencyConversion(currency);
             return conversion;
         } catch (MonetaryException e) {
-            throw e;
-            // throw ServiceUnvailable exception
+            throw new ServiceUnvailableException("The currency of the service is unavailable");
         }
 
     }
 
-    public boolean isCurrencyAvailable(String currencyCode) {
+    public boolean isCurrencyAvailable(final String currencyCode) {
         try {
             Monetary.getCurrency(currencyCode);
             return true;
         } catch (MonetaryException e) {
-            // Currency not found or not supported exception
-            return false;
+            throw new BadParameterException(String.format("Currency or service not available %s", currencyCode));
         }
     }
 
-    public double convertAmount(String fromCurrency, double fromAmount, String toCurrency) {
+    public double convertAmount(final String fromCurrency, final String toCurrency, final Double fromAmount) {
         Money fromAmountWithCurr = Money.of(fromAmount, fromCurrency);
         CurrencyConversion conversion = getCurrencyRate(toCurrency);
 

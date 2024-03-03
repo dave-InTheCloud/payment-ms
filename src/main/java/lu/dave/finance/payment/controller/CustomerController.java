@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lu.dave.finance.payment.dto.CustomerDto;
 import lu.dave.finance.payment.entity.CustomerEntity;
 import lu.dave.finance.payment.service.CustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,13 +23,14 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public CustomerEntity getById(@PathVariable Long id) {
-        return customerServiceImpl.findById(id);
+    public CustomerDto getById(@PathVariable Long id) {
+        return customerServiceImpl.getById(id);
     }
 
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public CustomerEntity create(@Valid @RequestBody CustomerDto customerDto) {
+    public CustomerDto create(@Valid @RequestBody CustomerDto customerDto) {
         return customerServiceImpl.save(customerDto);
     }
 
