@@ -1,10 +1,13 @@
 package lu.dave.finance.payment.dto;
 
 
-import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 @Data
+@JsonPropertyOrder({"id", "movementType", "status" , "fromCurrency", "currency", "toCurrency", "fromAccountId", "toAccountId",
+        "fromSerialNumber", "toSerialNumber","amount"})
 public class MovementDtoRequest {
     private Long  fromAccountId;
     private String  fromSerialNumber;

@@ -1,4 +1,4 @@
-package lu.dave.finance.payment.paymentMs.service;
+package lu.dave.finance.payment.service;
 
 import lu.dave.finance.payment.entity.enumaration.MovementType;
 import lu.dave.finance.payment.service.MovementServiceImpl;

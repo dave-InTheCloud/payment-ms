@@ -2,7 +2,9 @@
 demo of a payement microservice for spring-boot 3 native application 
 
 ## Documentation
+
 http://localhost:8080/docs/index.html
+
 http://localhost:8080/swagger-ui
 
 ## Compilation

@@ -1,13 +1,18 @@
 package lu.dave.finance.payment.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "CUSTOMER")
@@ -24,10 +29,8 @@ public class CustomerEntity {
 
     private LocalDate dateOfBirth;
 
-    /**
-     * @OneToMany(mappedBy = "contributor")
-     * private List<ContributorEntity> accounts;
-     **/
+    @OneToMany(mappedBy="customer")
+    private List<AccountEntity> accounts;
 
     @CreationTimestamp
     @Column(name = "CREATED_ON")

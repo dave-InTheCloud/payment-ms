@@ -23,6 +23,13 @@ public class MovementEntity {
     @JoinColumn(name = "ACCOUNT_ID")
     private AccountEntity account;
 
+    @ManyToOne
+    @JoinColumn(name = "TO_ACCOUNT_ID")
+    private AccountEntity toAccount;
+
+    @Column(name = "CURRENCY_CODE")
+    private String currencyCode;
+
     private Double amount;
 
     @Enumerated(EnumType.STRING)
@@ -30,6 +37,9 @@ public class MovementEntity {
 
     @Enumerated(EnumType.STRING)
     private MovementStatus status;
+
+    @Column(name = "ORDERED_ON")
+    private LocalDateTime orderedOn;
 
     @CreationTimestamp
     @Column(name = "CREATED_ON")

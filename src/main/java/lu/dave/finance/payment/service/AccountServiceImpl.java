@@ -3,9 +3,9 @@ package lu.dave.finance.payment.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lu.dave.finance.payment.dao.AccountRepository;
-import lu.dave.finance.payment.dto.AccountDtoRequest;
 import lu.dave.finance.payment.dto.AccountDto;
-import lu.dave.finance.payment.dto.ChildrenDto;
+import lu.dave.finance.payment.dto.AccountDtoRequest;
+import lu.dave.finance.payment.dto.AccountDtoWithCustomer;
 import lu.dave.finance.payment.entity.AccountEntity;
 import lu.dave.finance.payment.entity.CustomerEntity;
 import lu.dave.finance.payment.entity.enumaration.AccountType;
@@ -43,19 +43,23 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findById(id).orElseThrow(() -> new NotFoundException("account", id));
     }
 
+    public AccountDtoWithCustomer getById(Long id) {
+        return accountMapperImpl.convertWithChildren(this.findById(id));
+    }
+
+    public AccountDtoWithCustomer getBySerialNumber(String ssn) {
+        return accountMapperImpl.convertWithChildren(this.findBySerialNumber(ssn));
+    }
+
     public AccountEntity findBySerialNumber(String serialNumber) {
         return accountRepository.findBySerialNumber(serialNumber)
                 .orElseThrow(() -> new NotFoundException("account", serialNumber));
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public AccountEntity save(final AccountEntity accountEntity) {
         return accountRepository.save(accountEntity);
     }
-
-    public AccountEntity save(final AccountEntity accountEntity, Double amount, MovementType movementType) {
-        return accountRepository.save(accountEntity);
-    }
-
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)

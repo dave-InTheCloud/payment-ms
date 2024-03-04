@@ -6,7 +6,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 @Repository
 public interface CustomerRepository extends PagingAndSortingRepository<CustomerEntity, Long>
         , ListCrudRepository<CustomerEntity, Long> {

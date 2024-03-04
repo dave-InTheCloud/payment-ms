@@ -1,4 +1,4 @@
-package lu.dave.finance.payment.paymentMs;
+package lu.dave.finance.payment;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -2,8 +2,7 @@ package lu.dave.finance.payment.service;
 
 import lombok.AllArgsConstructor;
 import lu.dave.finance.payment.dao.MovementRepository;
-import lu.dave.finance.payment.dto.MovementDto;
-import lu.dave.finance.payment.dto.MovementDtoRequest;
+import lu.dave.finance.payment.dto.*;
 import lu.dave.finance.payment.entity.AccountEntity;
 import lu.dave.finance.payment.entity.MovementEntity;
 import lu.dave.finance.payment.entity.enumaration.MovementStatus;
@@ -11,68 +10,109 @@ import lu.dave.finance.payment.entity.enumaration.MovementType;
 import lu.dave.finance.payment.exception.BadParameterException;
 import lu.dave.finance.payment.mapper.MovementMapper;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
+
+@Transactional(readOnly = true)
 @AllArgsConstructor
 @Service
 public class MovementServiceImpl implements MovementService {
-
     private final MovementRepository movementRepository;
     private final AccountServiceImpl accountServiceImpl;
     private final ExchangeService exchangeServiceImpl;
-
     private final ConversionService conversionService;
     private final MovementMapper movementMapper;
 
+    public MovementDtoPageable getMovementsByAccountId(final Pageable pageable, final Long id) {
+        final Page<MovementEntity> movementEntities = movementRepository.findByAccountId(id, pageable);
+
+        if(movementEntities.getTotalPages() < pageable.getPageNumber())
+            throw new BadParameterException(
+                    String.format("You requested a page greater then the maximun number of page:  %s", pageable.getPageNumber()));
+
+        final MovementDtoPageable movementDtoPageable =
+                new MovementDtoPageable(movementMapper.entityToDto(movementEntities.getContent()), new PageableDto(movementEntities));
+
+        return movementDtoPageable;
+    }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public MovementDto save(MovementDtoRequest dto) {
+    public MovementDtoCreated save(MovementDtoRequest dto) {
         final AccountEntity fromAccount = dto.getFromAccountId() != null ?
                 accountServiceImpl.findById(dto.getFromAccountId()) :
                 accountServiceImpl.findBySerialNumber(dto.getFromSerialNumber());
 
-        this.transaction(dto, fromAccount);
-        this.save(dto, fromAccount, MovementType.DEBIT);
-        return this.save(dto, fromAccount, MovementType.CREDIT);
+        AccountEntity toAccount = dto.getToAccountId() != null ?
+                accountServiceImpl.findById(dto.getToAccountId())
+                : accountServiceImpl.findBySerialNumber(dto.getToSerialNumber());
+
+        Double convertedAmount = exchangeServiceImpl.convertAmount(fromAccount.getCurrencyCode(),
+                toAccount.getCurrencyCode(), dto.getAmount()).getNumber().doubleValue();
+
+        return this.executeTransaction(dto, fromAccount, toAccount, convertedAmount);
     }
 
 
-    private MovementDto save(final MovementDtoRequest dto, final AccountEntity account,
-                             final MovementType movementType) {
+    private MovementDtoCreated save(final MovementDtoRequest dto, final AccountEntity accountEntity,
+                                    final MovementType movementType, AccountEntity toAccount, LocalDateTime orderedOn) {
         MovementEntity movement = conversionService.convert(dto, MovementEntity.class);
-
-        movement.setAccount(account);
         movement.setMovementType(movementType);
         movement.setStatus(MovementStatus.PENDING);
+        movement.setOrderedOn(orderedOn);
 
-        movementRepository.save(movement);
+        if (MovementType.DEBIT == movementType) {
+            movement.setCurrencyCode(accountEntity.getCurrencyCode());
+            movement.setAccount(accountEntity);
+            movement.setToAccount(toAccount);
+        } else {
+            movement.setCurrencyCode(toAccount.getCurrencyCode());
+            movement.setAccount(toAccount);
+            movement.setToAccount(accountEntity);
+        }
 
-        return movementMapper.convertToDto(dto);
+        final MovementDtoCreated res = movementMapper.convert(movementRepository.save(movement));
+        res.setFromAccountId(accountEntity.getId());
+        res.setFromSerialNumber(accountEntity.getSerialNumber());
+        res.setFromCurrency(accountEntity.getCurrencyCode());
+        res.setToCurrency(accountEntity.getCurrencyCode());
+        res.setToAccountId(toAccount.getId());
+        res.setToSerialNumber(toAccount.getSerialNumber());
+
+        return res;
     }
 
-    public void transaction(final MovementDtoRequest movementDto, final AccountEntity fromAccount) {
-        // If authentication is done role and id should be retrieved from there and filter with secured annotation
-        //AccountEntity fromAccount = accountServiceImpl.findById(fromAccountId);
-        AccountEntity toAccount = movementDto.getToAccountId() != null ?
-                accountServiceImpl.findById(movementDto.getToAccountId())
-                : accountServiceImpl.findBySerialNumber(movementDto.getToSerialNumber());
+    private MovementDtoCreated executeTransaction(final MovementDtoRequest movementDtoReq, final AccountEntity fromAccount,
+                                                  AccountEntity toAccount, final Double convertedAmount) {
+        CheckTransactionRules(movementDtoReq, fromAccount, toAccount, convertedAmount);
 
-        CheckTransactionRules(fromAccount, toAccount, movementDto.getAmount());
-
-        Double amountConverted = exchangeServiceImpl.convertAmount(fromAccount.getCurrencyCode(),
-                toAccount.getCurrencyCode(), movementDto.getAmount()).getNumber().doubleValue();
-
-        fromAccount.setBalance(fromAccount.getBalance() - movementDto.getAmount());
-        toAccount.setBalance(toAccount.getBalance() + amountConverted);
+        fromAccount.setBalance(fromAccount.getBalance() - movementDtoReq.getAmount());
+        toAccount.setBalance(toAccount.getBalance() + convertedAmount);
 
         accountServiceImpl.save(fromAccount);
         accountServiceImpl.save(toAccount);
+
+        final LocalDateTime orderedOn = LocalDateTime.now();
+
+        final MovementDtoCreated fromMovement = this.save(movementDtoReq, fromAccount, MovementType.DEBIT, toAccount, orderedOn);
+
+        //will be use in save moment to store converted amount ond DB
+        movementDtoReq.setAmount(convertedAmount);
+        this.save(movementDtoReq, fromAccount, MovementType.CREDIT, toAccount, orderedOn);
+
+        fromMovement.setConvertedAmount(convertedAmount);
+
+        return fromMovement;
     }
 
 
-    private static void CheckTransactionRules(final AccountEntity fromAccount, final AccountEntity toAccount, final Double amount) {
+    private static void CheckTransactionRules(MovementDtoRequest movementDtoReq, final AccountEntity fromAccount, final AccountEntity toAccount, final Double amount) {
         if (fromAccount.getId().equals(toAccount.getId()))
             throw new BadParameterException("You cannot transfer fund from the same account");
 

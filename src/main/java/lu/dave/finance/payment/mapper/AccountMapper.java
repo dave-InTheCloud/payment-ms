@@ -1,9 +1,9 @@
 package lu.dave.finance.payment.mapper;
 
 import lu.dave.finance.payment.config.MapperSpringConfig;
-import lu.dave.finance.payment.dto.AccountDtoRequest;
 import lu.dave.finance.payment.dto.AccountDto;
-import lu.dave.finance.payment.dto.AccountDtoWithChildren;
+import lu.dave.finance.payment.dto.AccountDtoRequest;
+import lu.dave.finance.payment.dto.AccountDtoWithCustomer;
 import lu.dave.finance.payment.entity.AccountEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,8 +22,8 @@ public interface AccountMapper extends Converter<AccountDtoRequest, AccountEntit
     List<AccountDto> convert(List<AccountEntity> all);
 
     @Mapping(source = "customer.id", target = "ownerId")
-    AccountDtoWithChildren convertWithChildren(AccountEntity accountEntity);
+    AccountDtoWithCustomer convertWithChildren(AccountEntity accountEntity);
 
-    List<AccountDtoWithChildren> convertWithChildren(List<AccountEntity> accountEntity);
+    List<AccountDtoWithCustomer> convertWithChildren(List<AccountEntity> accountEntity);
 
 }

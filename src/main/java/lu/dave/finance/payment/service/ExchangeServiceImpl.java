@@ -38,12 +38,16 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     public MonetaryAmount convertAmount(final String fromCurrency, final String toCurrency, final Double fromAmount) {
-        Money fromAmountWithCurr = Money.of(fromAmount, fromCurrency);
-        CurrencyConversion conversion = getCurrencyRate(toCurrency);
+        try {
+            Money fromAmountWithCurr = Money.of(fromAmount, fromCurrency);
+            CurrencyConversion conversion = getCurrencyRate(toCurrency);
+            // Perform conversion using exchange rates
+            MonetaryAmount convertedAmount = fromAmountWithCurr.with(conversion);
+            return convertedAmount;
+        } catch (MonetaryException e) {
 
-        // Perform conversion using exchange rates
-        MonetaryAmount convertedAmount = fromAmountWithCurr.with(conversion);
-        return convertedAmount;
+            throw new BadParameterException(String.format("Conversion failed or service not available %s to %S", fromCurrency, toCurrency));
+        }
     }
 
 }

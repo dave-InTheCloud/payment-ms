@@ -1,6 +1,7 @@
 package lu.dave.finance.payment.service;
 
 import lu.dave.finance.payment.dto.CustomerDto;
+import lu.dave.finance.payment.dto.CustomerDtoRequest;
 import lu.dave.finance.payment.entity.CustomerEntity;
 
 import java.util.List;
@@ -8,11 +9,12 @@ import java.util.List;
 public interface CustomerService {
 
     List<CustomerEntity> findAll();
+    List<? extends CustomerDto> getAll();
 
-    CustomerDto getById(Long id);
+    CustomerDtoRequest getById(Long id);
 
     CustomerEntity findById(Long id);
 
 
-    CustomerDto save(CustomerDto customerDto);
+    CustomerDtoRequest save(CustomerDtoRequest customerDtoRequest);
 }
