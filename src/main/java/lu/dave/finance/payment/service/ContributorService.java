@@ -1,3 +1,4 @@
+/*
 package lu.dave.finance.payment.service;
 
 import lu.dave.finance.payment.entity.ContributorEntity;
@@ -9,3 +10,4 @@ public interface ContributorService {
 
     ContributorEntity findById(Long id);
 }
+*/

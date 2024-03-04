@@ -1,3 +1,4 @@
+/*
 package lu.dave.finance.payment.mapper;
 
 import lu.dave.finance.payment.config.MapperSpringConfig;
@@ -15,3 +16,4 @@ public interface ContributorMapper extends Converter<ContributorDto, Contributor
     //@Mapping(source = "contributorEntity.customerId")
     ContributorDto convert(ContributorEntity contributorEntity);
 }
+*/

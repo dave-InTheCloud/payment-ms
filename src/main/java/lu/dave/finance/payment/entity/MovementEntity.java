@@ -2,7 +2,8 @@ package lu.dave.finance.payment.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lu.dave.finance.payment.entity.enumaration.AmountType;
+import lu.dave.finance.payment.entity.enumaration.MovementStatus;
+import lu.dave.finance.payment.entity.enumaration.MovementType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,19 +19,17 @@ public class MovementEntity {
     @SequenceGenerator(name = "MOVEMENT_SEQ_GEN", sequenceName = "MOVEMENT_SEQ", allocationSize = 1)
     private Long id;
 
-    private Long customerId;
     @ManyToOne
-    @JoinColumn(name = "from_account_id")
-    private AccountEntity fromAccount;
-
-    @ManyToOne
-    @JoinColumn(name = "to_account_id")
-    private AccountEntity toAccount;
+    @JoinColumn(name = "ACCOUNT_ID")
+    private AccountEntity account;
 
     private Double amount;
 
     @Enumerated(EnumType.STRING)
-    private AmountType amountType;
+    private MovementType movementType;
+
+    @Enumerated(EnumType.STRING)
+    private MovementStatus status;
 
     @CreationTimestamp
     @Column(name = "CREATED_ON")

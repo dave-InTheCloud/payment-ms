@@ -1,3 +1,4 @@
+/*
 package lu.dave.finance.payment.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,7 +22,7 @@ public class ContributorEntity {
     @JoinColumn(name = "account_id")
     @JsonIgnore
     private AccountEntity account;
-    
+
     @ManyToOne
     @MapsId("customerId")
     @JoinColumn(name = "customer_id")
@@ -43,3 +44,4 @@ public class ContributorEntity {
     @UpdateTimestamp
     private LocalDateTime lastUpdatedOn;
 }
+*/

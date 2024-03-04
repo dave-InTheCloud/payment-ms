@@ -5,5 +5,5 @@ import lombok.ToString;
 //replace by ref db table if larger model
 @ToString
 public enum AccountType {
-    SAVING, MANAGER, VIEWER, PARTICIPANT
+    SAVING, PORTFOLIO;
 }

@@ -1,5 +1,7 @@
 package lu.dave.finance.payment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lu.dave.finance.payment.entity.enumaration.AccountType;
@@ -7,7 +9,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -35,9 +40,16 @@ public class AccountEntity {
     @Enumerated(EnumType.STRING)
     private AccountType type;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "OWNER_ID")
     private CustomerEntity customer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PARENT_ID")
+    private AccountEntity parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private List<AccountEntity> children = new ArrayList<>();
+
 
 //    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<MovementEntity> fromMovements;
@@ -46,8 +58,8 @@ public class AccountEntity {
 //    private List<MovementEntity> toMovements;
 
 
-    @OneToMany(mappedBy = "account")
-    private List<ContributorEntity> contributors;
+    //@OneToMany(mappedBy = "account")
+    //private List<ContributorEntity> contributors;
 
     @CreationTimestamp
     @Column(name = "CREATED_ON")

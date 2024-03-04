@@ -1,12 +1,7 @@
 package lu.dave.finance.payment.service;
 
-import lu.dave.finance.payment.dto.AccountDto;
-import lu.dave.finance.payment.dto.AccountDtoWithCustomer;
-import lu.dave.finance.payment.dto.MovementDto;
-import lu.dave.finance.payment.entity.AccountEntity;
-
-import java.util.List;
+import lu.dave.finance.payment.dto.MovementDtoRequest;
 
 public interface MovementService {
-    MovementDto save(MovementDto dto);
+    MovementDtoRequest save(MovementDtoRequest dto);
 }

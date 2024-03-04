@@ -5,6 +5,6 @@ import lombok.ToString;
 
 @ToString
 //replace by ref db table if larger model
-public enum AmountType {
+public enum MovementType {
     CREDIT, DEBIT;
 }

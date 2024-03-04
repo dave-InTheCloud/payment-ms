@@ -1,20 +1,15 @@
 package lu.dave.finance.payment.dto;
 
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.*;
 import lombok.Data;
-import lu.dave.finance.payment.entity.enumaration.AccountType;
+import lu.dave.finance.payment.entity.enumaration.MovementType;
 
 @Data
-public class MovementDto {
-    private String  fromCustomerId;
-    private Long  fromAccountId;
-    private String  fromSerialNumber;
-    private Long  toAccoutId;
-    private Long  toSerialNumber;
-    private Long  toCustomerId;
-    private Double amount;
+public class MovementDto extends  MovementDtoRequest {
+    private final MovementType movementType;
+
+    private final AccountDto fromAccount;
+
+    private final AccountDto toAccount;
 
 }

@@ -1,3 +1,4 @@
+/*
 package lu.dave.finance.payment.dao;
 
 import lu.dave.finance.payment.entity.ContributorEntity;
@@ -14,4 +15,4 @@ public interface ContributorRepository extends PagingAndSortingRepository<Contri
 
     // Add additional custom query methods here if needed
 
-}
+}*/

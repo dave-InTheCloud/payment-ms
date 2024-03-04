@@ -1,3 +1,4 @@
+/*
 package lu.dave.finance.payment.service;
 
 import lombok.AllArgsConstructor;
@@ -58,3 +59,4 @@ public class ContributorServiceImpl implements ContributorService {
     }
 
 }
+*/

@@ -37,13 +37,13 @@ public class ExchangeServiceImpl implements ExchangeService {
         }
     }
 
-    public double convertAmount(final String fromCurrency, final String toCurrency, final Double fromAmount) {
+    public MonetaryAmount convertAmount(final String fromCurrency, final String toCurrency, final Double fromAmount) {
         Money fromAmountWithCurr = Money.of(fromAmount, fromCurrency);
         CurrencyConversion conversion = getCurrencyRate(toCurrency);
 
         // Perform conversion using exchange rates
         MonetaryAmount convertedAmount = fromAmountWithCurr.with(conversion);
-        return convertedAmount.getNumber().doubleValueExact();
+        return convertedAmount;
     }
 
 }

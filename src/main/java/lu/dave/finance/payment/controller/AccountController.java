@@ -3,7 +3,8 @@ package lu.dave.finance.payment.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lu.dave.finance.payment.dto.AccountDto;
-import lu.dave.finance.payment.dto.AccountDtoWithCustomer;
+import lu.dave.finance.payment.dto.AccountDtoRequest;
+import lu.dave.finance.payment.dto.AccountDtoWithChildren;
 import lu.dave.finance.payment.entity.AccountEntity;
 import lu.dave.finance.payment.service.AccountService;
 import org.springframework.http.HttpStatus;
@@ -19,14 +20,14 @@ public class AccountController {
     private final AccountService accountServiceImpl;
 
     @GetMapping("")
-    public List<AccountDtoWithCustomer> getAll() {
+    public List<? extends AccountDto> getAll() {
         return accountServiceImpl.findAll();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public AccountDtoWithCustomer create(@Valid @RequestBody AccountDto accountDto) {
-        return accountServiceImpl.save(accountDto);
+    public AccountDto create(@Valid @RequestBody AccountDtoRequest accountDtoRequest) {
+        return accountServiceImpl.save(accountDtoRequest);
     }
 
 }
