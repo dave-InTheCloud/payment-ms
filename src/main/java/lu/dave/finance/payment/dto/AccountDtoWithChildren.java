@@ -12,8 +12,4 @@ public class AccountDtoWithChildren extends AccountDto {
     private Long id;
 
     private CustomerDto customer;
-
-    private AccountDto parent;
-
-    private List<AccountDto> children;
 }

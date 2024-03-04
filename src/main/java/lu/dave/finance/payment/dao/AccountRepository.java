@@ -18,7 +18,7 @@ public interface AccountRepository extends PagingAndSortingRepository<AccountEnt
     // Add additional custom query methods here if needed
     boolean existsAccountEntityBySerialNumber(String name);
 
-
+/*
     //return only one line with it's own id if not parent
     @Query(value = """
             WITH ancestors(ID, PARENT_ID) AS (
@@ -42,5 +42,5 @@ public interface AccountRepository extends PagingAndSortingRepository<AccountEnt
             )
             SELECT * FROM children
             """, nativeQuery = true)
-    List<Long> findChildren(@Param("parentId") Long parentId);
+    List<Long> findChildren(@Param("parentId") Long parentId);*/
 }

@@ -43,23 +43,6 @@ public class AccountEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "OWNER_ID")
     private CustomerEntity customer;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARENT_ID")
-    private AccountEntity parent;
-
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-    private List<AccountEntity> children = new ArrayList<>();
-
-
-//    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<MovementEntity> fromMovements;
-//
-//    @OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<MovementEntity> toMovements;
-
-
-    //@OneToMany(mappedBy = "account")
-    //private List<ContributorEntity> contributors;
 
     @CreationTimestamp
     @Column(name = "CREATED_ON")

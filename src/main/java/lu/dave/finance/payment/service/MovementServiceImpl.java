@@ -1,7 +1,6 @@
 package lu.dave.finance.payment.service;
 
 import lombok.AllArgsConstructor;
-import lu.dave.finance.payment.dao.AccountRepository;
 import lu.dave.finance.payment.dao.MovementRepository;
 import lu.dave.finance.payment.dto.MovementDto;
 import lu.dave.finance.payment.dto.MovementDtoRequest;
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.Collectors;
-
 @AllArgsConstructor
 @Service
 public class MovementServiceImpl implements MovementService {
@@ -27,27 +24,26 @@ public class MovementServiceImpl implements MovementService {
     private final ExchangeService exchangeServiceImpl;
 
     private final ConversionService conversionService;
-
     private final MovementMapper movementMapper;
 
-    private final AccountRepository accountRepository;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public MovementDto save(MovementDtoRequest dto) {
         final AccountEntity fromAccount = accountServiceImpl.findById(dto.getFromAccountId());
 
         this.transaction(dto);
-        this.save(dto, fromAccount, MovementType.DEBIT, MovementStatus.PENDING);
-        return this.save(dto, fromAccount, MovementType.CREDIT, MovementStatus.PENDING);
+        this.save(dto, fromAccount, MovementType.DEBIT);
+        return this.save(dto, fromAccount, MovementType.CREDIT);
     }
 
 
-    private MovementDto save(MovementDtoRequest dto, AccountEntity account, MovementType movementType, MovementStatus status) {
+    private MovementDto save(final MovementDtoRequest dto, final AccountEntity account,
+                             final  MovementType movementType) {
         MovementEntity movement = conversionService.convert(dto, MovementEntity.class);
 
         movement.setAccount(account);
         movement.setMovementType(movementType);
-        movement.setStatus(status);
+        movement.setStatus(MovementStatus.PENDING);
 
         movementRepository.save(movement);
 
@@ -68,29 +64,15 @@ public class MovementServiceImpl implements MovementService {
         Double amountConverted = exchangeServiceImpl.convertAmount(fromAccount.getCurrencyCode(),
                 toAccount.getCurrencyCode(), amount).getNumber().doubleValue();
 
-        boolean isParents = accountServiceImpl.findAllParents(fromAccountId)
-                .stream().filter(id -> id.equals(toAccount)).count() > 0;
+        fromAccount.setBalance(fromAccount.getBalance() - amount);
+        toAccount.setBalance(toAccount.getBalance() + amountConverted);
 
-        boolean isChild = accountServiceImpl.findAllChildren(fromAccountId)
-                .stream().filter(id -> id.equals(toAccount)).count() > 0;
-
-        // Same parents no needs to update parents account
-        if (fromAccount.getParent().getId().equals(toAccount.getParent().getId())) {
-            fromAccount.setBalance(fromAccount.getBalance() - amount);
-            toAccount.setBalance(toAccount.getBalance() + amountConverted);
-
-            accountServiceImpl.save(fromAccount);
-            accountServiceImpl.save(toAccount);
-        } else if (isParents || isChild) {
-            throw new BadParameterException("Transfer between account on the same hierarchy at a different level is not allowed");
-        } else {
-            accountServiceImpl.save(fromAccount, amount, MovementType.DEBIT);
-            accountServiceImpl.save(toAccount, amountConverted, MovementType.CREDIT);
-        }
+        accountServiceImpl.save(fromAccount);
+        accountServiceImpl.save(toAccount);
     }
 
 
-    private static void CheckTransactionRules(AccountEntity fromAccount, AccountEntity toAccount, Double amount) {
+    private static void CheckTransactionRules(final AccountEntity fromAccount, final AccountEntity toAccount, final Double amount) {
         if (fromAccount.getId().equals(toAccount.getId()))
             throw new BadParameterException("You cannot transfer fund from the same account");
 

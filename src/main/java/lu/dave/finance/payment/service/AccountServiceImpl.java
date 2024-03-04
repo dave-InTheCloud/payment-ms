@@ -48,20 +48,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public AccountEntity save(final AccountEntity accountEntity, Double amount, MovementType movementType) {
-        if (accountEntity.getParent() != null && accountEntity.getParent().getId() != null)
-            updateParentAccount(accountEntity.getParent().getId(), accountEntity.getParent().getCurrencyCode(),
-                    accountEntity, amount, movementType);
         return accountRepository.save(accountEntity);
     }
 
-    public List<Long> findAllChildren(Long accountId) {
-        return accountRepository.findChildren(accountId);
-    }
-
-    // return one line if no parents
-    public List<Long> findAllParents(Long accountId) {
-        return accountRepository.findParentIds(accountId);
-    }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -73,57 +62,10 @@ public class AccountServiceImpl implements AccountService {
         AccountEntity account = conversionService.convert(accountDtoRequest, AccountEntity.class);
         account.setCustomer(customer);
 
-
-        if (accountDtoRequest.getParentId() != null) {
-
-            final AccountEntity parentAccount = (accountDtoRequest.getParentId() != null) ?
-                    this.findById(accountDtoRequest.getParentId()) : null;
-
-            if (account.getParent() != null) {
-                account.getChildren().add(account);
-                parentAccount.setChildren(account.getChildren());
-            }
-
-            updateParentAccount(accountDtoRequest.getParentId(), accountDtoRequest.getCurrencyCode(),
-                    account, accountDtoRequest.getBalance(), MovementType.CREDIT);
-        }
-
         account = accountRepository.save(account);
 
         return accountMapperImpl.convertWithChildren(account);
     }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    private void updateParentAccount(final Long parentId, final String currencyCode, final AccountEntity account,
-                                     final Double amount, MovementType movementType) {
-        final AccountEntity parentAccount = (parentId != null) ?
-                this.findById(parentId) : null;
-
-        if (!parentAccount.getCurrencyCode().equalsIgnoreCase(currencyCode)) {
-
-            Double convertedAmount = exchangeServiceImpl.convertAmount(currencyCode,
-                    parentAccount.getCurrencyCode(), amount).getNumber().doubleValue();
-
-            if (movementType == MovementType.CREDIT) {
-                parentAccount.setBalance(account.getBalance() + convertedAmount);
-            } else {
-                parentAccount.setBalance(account.getBalance() - convertedAmount);
-            }
-        } else {
-            if (movementType == MovementType.CREDIT) {
-                parentAccount.setBalance(parentAccount.getBalance() + amount);
-            } else {
-                parentAccount.setBalance(parentAccount.getBalance() - amount);
-            }
-        }
-
-        account.setParent(parentAccount);
-        accountRepository.save(parentAccount);
-
-        if (parentAccount.getParent() != null) this.updateParentAccount(parentAccount.getParent().getId(),
-                parentAccount.getParent().getCurrencyCode(), parentAccount, amount, movementType);
-    }
-
 
     private void checkAdditionalRules(final AccountDtoRequest accountDtoRequest) {
         boolean emptySinceRequest = StringUtils.isEmpty(accountDtoRequest.getSerialNumber());
