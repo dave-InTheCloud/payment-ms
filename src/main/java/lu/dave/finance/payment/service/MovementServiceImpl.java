@@ -29,16 +29,18 @@ public class MovementServiceImpl implements MovementService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public MovementDto save(MovementDtoRequest dto) {
-        final AccountEntity fromAccount = accountServiceImpl.findById(dto.getFromAccountId());
+        final AccountEntity fromAccount = dto.getFromAccountId() != null ?
+                accountServiceImpl.findById(dto.getFromAccountId()) :
+                accountServiceImpl.findBySerialNumber(dto.getFromSerialNumber());
 
-        this.transaction(dto);
+        this.transaction(dto, fromAccount);
         this.save(dto, fromAccount, MovementType.DEBIT);
         return this.save(dto, fromAccount, MovementType.CREDIT);
     }
 
 
     private MovementDto save(final MovementDtoRequest dto, final AccountEntity account,
-                             final  MovementType movementType) {
+                             final MovementType movementType) {
         MovementEntity movement = conversionService.convert(dto, MovementEntity.class);
 
         movement.setAccount(account);
@@ -50,21 +52,19 @@ public class MovementServiceImpl implements MovementService {
         return movementMapper.convertToDto(dto);
     }
 
-    public void transaction(final MovementDtoRequest movementDto) {
-        this.transaction(movementDto.getFromAccountId(), movementDto.getToAccountId(), movementDto.getAmount());
-    }
-
-    public void transaction(final Long fromAccountId, final Long toAccountId, final Double amount) {
+    public void transaction(final MovementDtoRequest movementDto, final AccountEntity fromAccount) {
         // If authentication is done role and id should be retrieved from there and filter with secured annotation
-        AccountEntity fromAccount = accountServiceImpl.findById(fromAccountId);
-        AccountEntity toAccount = accountServiceImpl.findById(toAccountId);
+        //AccountEntity fromAccount = accountServiceImpl.findById(fromAccountId);
+        AccountEntity toAccount = movementDto.getToAccountId() != null ?
+                accountServiceImpl.findById(movementDto.getToAccountId())
+                : accountServiceImpl.findBySerialNumber(movementDto.getToSerialNumber());
 
-        CheckTransactionRules(fromAccount, toAccount, amount);
+        CheckTransactionRules(fromAccount, toAccount, movementDto.getAmount());
 
         Double amountConverted = exchangeServiceImpl.convertAmount(fromAccount.getCurrencyCode(),
-                toAccount.getCurrencyCode(), amount).getNumber().doubleValue();
+                toAccount.getCurrencyCode(), movementDto.getAmount()).getNumber().doubleValue();
 
-        fromAccount.setBalance(fromAccount.getBalance() - amount);
+        fromAccount.setBalance(fromAccount.getBalance() - movementDto.getAmount());
         toAccount.setBalance(toAccount.getBalance() + amountConverted);
 
         accountServiceImpl.save(fromAccount);

@@ -43,6 +43,11 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findById(id).orElseThrow(() -> new NotFoundException("account", id));
     }
 
+    public AccountEntity findBySerialNumber(String serialNumber) {
+        return accountRepository.findBySerialNumber(serialNumber)
+                .orElseThrow(() -> new NotFoundException("account", serialNumber));
+    }
+
     public AccountEntity save(final AccountEntity accountEntity) {
         return accountRepository.save(accountEntity);
     }
@@ -86,7 +91,7 @@ public class AccountServiceImpl implements AccountService {
             this.generateSerialNumber(accountDtoRequest, emptySinceRequest);
         } else if (emptySinceRequest) {
             String countryCode = StringUtils.chop(accountDtoRequest.getCurrencyCode());
-            String sn = StringUtils.chop(countryCode) + RandomStringUtils.randomAlphanumeric(20);
+            String sn = countryCode + RandomStringUtils.randomAlphanumeric(20);
             accountDtoRequest.setSerialNumber(sn);
         } else {
             throw new BadParameterException("The serialNumber already exist");

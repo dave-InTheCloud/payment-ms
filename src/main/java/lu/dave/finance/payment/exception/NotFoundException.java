@@ -10,10 +10,17 @@ public class NotFoundException extends RuntimeException {
     public static final String NO_ENTITY = "No %s found with the id %s";
     private String message;
     private String entity;
-    private Long id;
+    private String id;
     public NotFoundException(String entity, Long id) {
         super(String.format(NO_ENTITY, entity, id.toString()));
-        this.message = String.format(NO_ENTITY, entity, id.toString());
+        this.id = id.toString();
+        this.message = String.format(NO_ENTITY, entity, id);
+        this.entity = entity;
+
+    }
+    public NotFoundException(String entity, String id){
+        super(String.format(NO_ENTITY, entity, id));
+        this.message = String.format(NO_ENTITY, entity, id);
         this.entity = entity;
         this.id = id;
     }
