@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static lu.dave.finance.payment.config.ServletConfig.basePathApi;
+
 @AllArgsConstructor
 @RestController
-@RequestMapping("/movements")
+@RequestMapping(basePathApi + "/movements")
 public class MovementController {
 
     private final MovementService movementServiceImpl;

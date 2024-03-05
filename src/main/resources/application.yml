@@ -1,5 +1,9 @@
-spring:
+server:
   port: 8080
+  #servlet:
+    #context-path: /api
+
+spring:
   jacksonproperty-naming-strategy: SNAKE_CASE
   h2:
     console:

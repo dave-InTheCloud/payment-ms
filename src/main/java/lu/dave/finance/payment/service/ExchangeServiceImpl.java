@@ -6,22 +6,31 @@ import lu.dave.finance.payment.exception.ServiceUnvailableException;
 import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Service;
 
+import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.MonetaryException;
-import javax.money.convert.CurrencyConversion;
-import javax.money.convert.ExchangeRateProvider;
-import javax.money.convert.MonetaryConversions;
+import javax.money.convert.*;
 
 @AllArgsConstructor
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
 
-    public CurrencyConversion getCurrencyRate(final String currency) {
+    public CurrencyConversion getCurrencyRateConversion(final String currency) {
         try {
-            ExchangeRateProvider rateProvider = MonetaryConversions.getExchangeRateProvider("ECB-HIST", "ECB-HIST90", "ECB");
+            ExchangeRateProvider rateProvider = MonetaryConversions.getExchangeRateProvider( "ECB");
             CurrencyConversion conversion = rateProvider.getCurrencyConversion(currency);
             return conversion;
+        } catch (MonetaryException e) {
+            throw new ServiceUnvailableException("The currency of the service is unavailable");
+        }
+
+    }
+
+    public ExchangeRate getCurrencyRate(final String fromCurrency, final String toCurrency) {
+        try {
+            ExchangeRateProvider rateProvider = MonetaryConversions.getExchangeRateProvider( "ECB");
+            return  rateProvider.getExchangeRate(fromCurrency, toCurrency);
         } catch (MonetaryException e) {
             throw new ServiceUnvailableException("The currency of the service is unavailable");
         }
@@ -40,7 +49,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     public MonetaryAmount convertAmount(final String fromCurrency, final String toCurrency, final Double fromAmount) {
         try {
             Money fromAmountWithCurr = Money.of(fromAmount, fromCurrency);
-            CurrencyConversion conversion = getCurrencyRate(toCurrency);
+            CurrencyConversion conversion = getCurrencyRateConversion(toCurrency);
             // Perform conversion using exchange rates
             MonetaryAmount convertedAmount = fromAmountWithCurr.with(conversion);
             return convertedAmount;

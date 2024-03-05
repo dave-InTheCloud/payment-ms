@@ -19,6 +19,9 @@
         <hibernate.version>6.4.2.Final</hibernate.version>
         <org.mapstruct.extensions.spring.version>1.1.1</org.mapstruct.extensions.spring.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <node.version>v18.16.0</node.version>
+        <npm.version>9.6.5</npm.version>
+        <frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -40,6 +43,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
@@ -124,25 +128,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-
-
-        <!--        <dependency>-->
-        <!--            <groupId>javax.money</groupId>-->
-        <!--            <artifactId>money-api</artifactId>-->
-        <!--            <version>1.1</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.javamoney.moneta</groupId>-->
-        <!--            <artifactId>moneta-core</artifactId>-->
-        <!--            <version>1.4.4</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.javamoney.moneta</groupId>-->
-        <!--            <artifactId>moneta-convert-ecb</artifactId>-->
-        <!--            <version>1.4.4</version>-->
-        <!--        </dependency>-->
-
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.javamoney.moneta/moneta-convert-imf &ndash;&gt;-->
     </dependencies>
 
     <build>
@@ -186,7 +171,7 @@
                         <!--<buildArg>-H:IncludeLocales=fr,en,us,en_US</buildArg>-->
                         <!--<buildArg>-H:-LocalizationOptimizedMode</buildArg> -->
                         <!-- <buildArg>-H:Log=registerResource:3</buildArg> -->
-                      <!--<buildArg>-H:IncludeResources=${project.basedir}/.resourceCache/*</buildArg>-->
+                        <!--<buildArg>-H:IncludeResources=${project.basedir}/.resourceCache/*</buildArg>-->
                         <buildArg>-H:IncludeResourceBundles=sun.util.resources.CurrencyNames</buildArg>
                     </buildArgs>
                 </configuration>
@@ -268,33 +253,6 @@
                 </configuration>
             </plugin>
 
-            <!-- ascidoc spring style
-             <plugin>
-	<groupId>org.asciidoctor</groupId>
-	<artifactId>asciidoctor-maven-plugin</artifactId>
-	<version>2.1.0</version>
-	<executions>
-		<execution>
-			<id>generate-html-documentation</id>
-			<phase>prepare-package</phase>
-			<goals>
-				<goal>process-asciidoc</goal>
-			</goals>
-			<configuration>
-				<backend>spring-html</backend>
-			</configuration>
-		</execution>
-	</executions>
-	<dependencies>
-		<dependency>
-			<groupId>io.spring.asciidoctor.backends</groupId>
-			<artifactId>spring-asciidoctor-backends</artifactId>
-			<version>${spring-asciidoctor-backends.version}</version>
-		</dependency>
-	</dependencies>
-</plugin>
--->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -345,5 +303,97 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-resources</id>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/classes/static</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>app/build</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>${frontend-maven-plugin.version}</version>
+                        <configuration>
+                            <workingDirectory>app</workingDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>install node</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <configuration>
+                                    <nodeVersion>${node.version}</nodeVersion>
+                                    <npmVersion>${npm.version}</npmVersion>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm install</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                            </execution>
+                            <execution>
+                                <id>npm test</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <phase>test</phase>
+                                <configuration>
+                                    <arguments>test</arguments>
+                                    <environmentVariables>
+                                        <CI>true</CI>
+                                    </environmentVariables>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm build</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <arguments>run build</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

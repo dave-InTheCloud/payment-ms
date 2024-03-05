@@ -6,9 +6,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class ServletConfig implements WebMvcConfigurer {
+
+    public static final String basePathApi = "/api";
+
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         // depreacated but  @GetMapping({"", "/"}) generate two endpoints in swagger)
         configurer.setUseTrailingSlashMatch(true);
     }
+
 }

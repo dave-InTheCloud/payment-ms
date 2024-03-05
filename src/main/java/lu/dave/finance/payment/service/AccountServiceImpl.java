@@ -13,9 +13,12 @@ import lu.dave.finance.payment.entity.enumaration.MovementType;
 import lu.dave.finance.payment.exception.BadParameterException;
 import lu.dave.finance.payment.exception.NotFoundException;
 import lu.dave.finance.payment.mapper.AccountMapper;
+import lu.dave.finance.payment.util.PageValidationUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,10 +37,16 @@ public class AccountServiceImpl implements AccountService {
     private final AccountMapper accountMapperImpl;
 
 
-    @Override
     public List<? extends AccountDto> findAll() {
         return accountMapperImpl.convertWithChildren(accountRepository.findAll());
     }
+
+    public List<? extends AccountDto> findAll(Pageable pageable) {
+        final Page<AccountEntity> accountEntityPage = accountRepository.findAll(pageable);
+        PageValidationUtil.validatePageNumber(accountEntityPage, pageable);
+        return accountMapperImpl.convertWithChildren(accountRepository.findAll());
+    }
+
 
     public AccountEntity findById(Long id) {
         return accountRepository.findById(id).orElseThrow(() -> new NotFoundException("account", id));

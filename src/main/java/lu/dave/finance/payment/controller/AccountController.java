@@ -6,6 +6,7 @@ import lu.dave.finance.payment.dto.*;
 import lu.dave.finance.payment.exception.BadParameterException;
 import lu.dave.finance.payment.service.AccountService;
 import lu.dave.finance.payment.service.MovementService;
+import lu.dave.finance.payment.util.PageValidationUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static lu.dave.finance.payment.config.ServletConfig.basePathApi;
+
 @AllArgsConstructor
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping(basePathApi+"/accounts")
 public class AccountController {
 
     private final AccountService accountServiceImpl;
@@ -24,8 +27,8 @@ public class AccountController {
 
 
     @GetMapping("")
-    public List<? extends AccountDto> getAll() {
-        return accountServiceImpl.findAll();
+    public List<? extends AccountDto> getAll(@PageableDefault(value = 20, page = 0) Pageable pageable) {
+        return accountServiceImpl.findAll(pageable);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -43,10 +46,8 @@ public class AccountController {
     @GetMapping("/{id}/movements")
     public MovementDtoPageable getMovementsByAccountId(@PageableDefault(value = 20, page = 0) Pageable pageable,
                                                        @PathVariable Long id) {
-
-        // by default return the first page 0
-        if(pageable.getPageNumber() < 0) throw new BadParameterException("Provide a pagination greater or equal to 0");
-
+        PageValidationUtil.pageIsNegative(pageable);
         return movementServiceImpl.getMovementsByAccountId(pageable, id);
     }
+
 }

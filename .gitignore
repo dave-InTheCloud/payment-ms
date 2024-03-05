@@ -34,3 +34,7 @@ build/
 /.resourceCache/ECBCurrentRateProvider.dat
 /.resourceCache/ECBHistoric90RateProvider.dat
 /.resourceCache/ECBHistoricRateProvider.dat
+
+/app/build/
+/app/node/
+/app/node_modules/

@@ -15,8 +15,6 @@ import java.util.List;
 public interface MovementRepository extends PagingAndSortingRepository<MovementEntity, Long>
         , ListCrudRepository<MovementEntity, Long> {
 
-    //boolean existsCustomerEntityByEmail(String email);
-
     // Credit and Debit
     List<MovementEntity> findByAccountIdOrToAccountId(Long id, Long toId);
 

@@ -10,9 +10,12 @@ import lu.dave.finance.payment.exception.ServiceUnvailableException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,8 +27,7 @@ import java.util.Map;
 public class ErrorController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorDto> handleValidationErrors(MethodArgumentNotValidException ex,
-                                                                            final HttpServletRequest request) {
+    public ResponseEntity<ErrorDto> handleValidationErrors(MethodArgumentNotValidException ex, final HttpServletRequest request) {
         List<String> errorResponse = new ArrayList<>();
 
         // Get field errors and their corresponding messages
@@ -34,12 +36,28 @@ public class ErrorController {
             String errorMessage = fieldError.getDefaultMessage();
 
             // Create ErrorEntry objects to store both field name and error message
-            errorResponse.add(String.format("%s : %s",fieldName, errorMessage));
+            errorResponse.add(String.format("%s : %s", fieldName, errorMessage));
         });
 
+
         ErrorDto errorDto = new ErrorDto(HttpStatus.BAD_REQUEST.value(), errorResponse, request);
+        logErrorDto(" MethodArgumentNotValidException Occur for %{} with status {}: %{}", errorDto);
 
         return new ResponseEntity<>(errorDto, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorDto> handleMissingParameter(final MissingServletRequestParameterException ex,
+                                                          final HttpServletRequest request ) {
+        String missingParam = ex.getParameterName();
+        String message = String.format("Missing required parameter: %s", missingParam);
+
+
+        ErrorDto errorDto = new ErrorDto(HttpStatus.BAD_REQUEST.value(), message, request);
+        logErrorDto(" MissingServletRequestParameterException Occur for %{} with status {}: %{}", errorDto);
+
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({NotFoundException.class, ForbiddenException.class,
@@ -51,10 +69,6 @@ public class ErrorController {
        HttpStatus httpStatus = switch (exception) {
             // instance of
             case NotFoundException e -> HttpStatus.NOT_FOUND;
-            case ForbiddenException e -> HttpStatus.FORBIDDEN;
-            case BadParameterException e -> HttpStatus.BAD_REQUEST;
-            case ServiceUnvailableException e -> HttpStatus.SERVICE_UNAVAILABLE;
-            // ...
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
         };*/
         final HttpStatus httpStatus;
@@ -70,7 +84,14 @@ public class ErrorController {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
+
         ErrorDto errorDto = new ErrorDto(httpStatus.value(), exception.getMessage(), request);
+        logErrorDto("A Runtime exception Occur for %{} with status {}: %{}", errorDto);
         return new ResponseEntity<>(errorDto, httpStatus);
     }
+
+    private static void logErrorDto(String s, ErrorDto errorDto) {
+        log.error(s, errorDto.getPath(), errorDto.getStatus(), errorDto.getError());
+    }
+
 }

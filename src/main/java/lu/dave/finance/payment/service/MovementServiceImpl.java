@@ -9,6 +9,7 @@ import lu.dave.finance.payment.entity.enumaration.MovementStatus;
 import lu.dave.finance.payment.entity.enumaration.MovementType;
 import lu.dave.finance.payment.exception.BadParameterException;
 import lu.dave.finance.payment.mapper.MovementMapper;
+import lu.dave.finance.payment.util.PageValidationUtil;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,15 +33,10 @@ public class MovementServiceImpl implements MovementService {
 
     public MovementDtoPageable getMovementsByAccountId(final Pageable pageable, final Long id) {
         final Page<MovementEntity> movementEntities = movementRepository.findByAccountId(id, pageable);
+        PageValidationUtil.validatePageNumber(movementEntities, pageable);
 
-        if(movementEntities.getTotalPages() < pageable.getPageNumber())
-            throw new BadParameterException(
-                    String.format("You requested a page greater then the maximun number of page:  %s", pageable.getPageNumber()));
-
-        final MovementDtoPageable movementDtoPageable =
-                new MovementDtoPageable(movementMapper.entityToDto(movementEntities.getContent()), new PageableDto(movementEntities));
-
-        return movementDtoPageable;
+        return new MovementDtoPageable(movementMapper.entityToDto(movementEntities.getContent()),
+                new PageableDto(movementEntities));
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

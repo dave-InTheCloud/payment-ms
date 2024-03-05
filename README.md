@@ -17,9 +17,9 @@ sdk install java 22.3.r17-nik
 sdk use java 22.3.r17-nik
 
 # after any changes
-mvn clean install -U
-mvn clean package -Pnative
-mvn -Pnative native:compile 
+mvn clean install -U  -Dmaven.test.skip=true
+mvn clean package -Pnative -Dmaven.test.skip=true
+mvn -Pnative native:compile -Dmaven.test.skip=true
 ```
 
 
@@ -27,6 +27,11 @@ Docker native image :
 ```bash
 # Docker need to be running
 mvn clean install -U
-mvn clean package -Pnative
-mvn -Pnative spring-boot:build-image
+mvn clean package -Pnative -Dmaven.test.skip=true
+mvn -Pnative spring-boot:build-image -Dmaven.test.skip=true
+```
+
+build front and run front + back-end: 
+```bash
+mvn -Pnative spring-boot:build-image -Dmaven.test.skip=true
 ```

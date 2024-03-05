@@ -51,16 +51,13 @@ public class AccountServiceImplTest {
         List<AccountEntity> emptyList = new ArrayList<>();
         when(accountRepository.findAll()).thenReturn(emptyList);
 
-        // Call the method
         List<? extends AccountDto> allAccounts = accountService.findAll();
 
-        // Assertions
         assertEquals(emptyList, allAccounts);
     }
 
     @Test
     public void testFindAll_ShouldReturnListWithOneAccount() {
-        // Mock behavior
         List<AccountEntity> accountList = new ArrayList<>();
         AccountEntity account = new AccountEntity();
         account.setName("account name");
@@ -69,19 +66,15 @@ public class AccountServiceImplTest {
         when(accountRepository.findAll()).thenReturn(accountList);
         when(accountMapperImpl.convertWithChildren(accountList)).thenReturn(List.of(new AccountDtoWithCustomer())); // Mock conversion
 
-        // Call the method
         List<? extends AccountDto> allAccounts = accountService.findAll();
 
-        // Assertions
         assertEquals(1, allAccounts.size());
     }
 
     @Test
     public void testFindById_ShouldThrowNotFoundException_WhenAccountNotFound() {
-        // Mock behavior
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Expected exception
         assertThrows(NotFoundException.class, () -> accountService.findById(1L));
     }
 
