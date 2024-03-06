@@ -7,8 +7,8 @@ import formatErrorMessage from './ErrorUtils';
 
 const CustomerEdit = () => {
   const initialFormState = {
-    name: 'WonderfullSE',
-    email: 'WonderfullSE@techlover.wiki',
+    name: '',
+    email: '',
     date: new Date(),
   };
 
@@ -74,12 +74,12 @@ const CustomerEdit = () => {
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label for="name">Owner id</Label>
-          <Input type="text" name="name" id="name" value={customer.name || ''}
+          <Input type="text" name="name" id="name" value={customer.name || ''} placeholder='WonderfullSE'
             onChange={handleChange} autoComplete="name" />
         </FormGroup>
         <FormGroup>
           <Label for="email">Currency</Label>
-          <Input type="email" name="email" id="email" value={customer.email || ''}
+          <Input type="email" name="email" id="email" value={customer.email || ''} placeholder='WonderfullSE@techlover.wiki'
             onChange={handleChange} autoComplete="email" />
         </FormGroup>
         <FormGroup>

@@ -15,8 +15,8 @@ import java.util.Optional;
 public interface AccountRepository extends PagingAndSortingRepository<AccountEntity, Long>
         , ListCrudRepository<AccountEntity, Long>, JpaRepository<AccountEntity, Long> {
 
+    boolean existsAccountEntityById(Long serialNumber);
     boolean existsAccountEntityBySerialNumber(String serialNumber);
     Optional<AccountEntity> findBySerialNumber(String serialNumber);
 
-    Page<AccountEntity> findAll(Pageable pageable);
 }

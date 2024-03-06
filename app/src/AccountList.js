@@ -19,13 +19,15 @@ const AccountList = () => {
   useEffect(() => {
     setLoading(true);
 
-    fetch('api/accounts')
+    fetch(`api/accounts?page=${currentPage}&size=${pageSize}`)
       .then(response => response.json())
       .then(data => {
-        setAccounts(data);
+        setAccounts(data.accounts);
+        setTotalPage(data.page.totalPage);
+        if (currentPage >= data.page.totalPage) setCurrentPage(data.page.totalPage - 1);
         setLoading(false);
       })
-  }, []);
+  }, [currentPage, pageSize, totalPage]);
 
   const remove = async (id) => {
     await fetch(`/api/group/${id}`, {

@@ -3,9 +3,7 @@ package lu.dave.finance.payment.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lu.dave.finance.payment.dao.AccountRepository;
-import lu.dave.finance.payment.dto.AccountDto;
-import lu.dave.finance.payment.dto.AccountDtoRequest;
-import lu.dave.finance.payment.dto.AccountDtoWithCustomer;
+import lu.dave.finance.payment.dto.*;
 import lu.dave.finance.payment.entity.AccountEntity;
 import lu.dave.finance.payment.entity.CustomerEntity;
 import lu.dave.finance.payment.entity.enumaration.AccountType;
@@ -41,15 +39,21 @@ public class AccountServiceImpl implements AccountService {
         return accountMapperImpl.convertWithChildren(accountRepository.findAll());
     }
 
-    public List<? extends AccountDto> findAll(Pageable pageable) {
+    public AccountDtoPageable findAll(Pageable pageable) {
         final Page<AccountEntity> accountEntityPage = accountRepository.findAll(pageable);
         PageValidationUtil.validatePageNumber(accountEntityPage, pageable);
-        return accountMapperImpl.convertWithChildren(accountRepository.findAll());
+
+        return new AccountDtoPageable(accountMapperImpl.convertWithChildren(accountEntityPage.getContent()),
+                new PageableDto(accountEntityPage));
     }
 
 
     public AccountEntity findById(Long id) {
         return accountRepository.findById(id).orElseThrow(() -> new NotFoundException("account", id));
+    }
+
+    public boolean existById(Long id){
+        return accountRepository.existsAccountEntityById(id);
     }
 
     public AccountDtoWithCustomer getById(Long id) {

@@ -8,6 +8,7 @@ import lu.dave.finance.payment.entity.MovementEntity;
 import lu.dave.finance.payment.entity.enumaration.MovementStatus;
 import lu.dave.finance.payment.entity.enumaration.MovementType;
 import lu.dave.finance.payment.exception.BadParameterException;
+import lu.dave.finance.payment.exception.NotFoundException;
 import lu.dave.finance.payment.mapper.MovementMapper;
 import lu.dave.finance.payment.util.PageValidationUtil;
 import org.springframework.core.convert.ConversionService;
@@ -31,7 +32,16 @@ public class MovementServiceImpl implements MovementService {
     private final ConversionService conversionService;
     private final MovementMapper movementMapper;
 
+
+    public MovementDtoPageable getAll(final Pageable pageable) {
+        final Page<MovementEntity> movementEntities = movementRepository.findAll(pageable);
+        PageValidationUtil.validatePageNumber(movementEntities, pageable);
+
+        return new MovementDtoPageable(movementMapper.entityToDto(movementEntities.getContent()),
+                new PageableDto(movementEntities));
+    }
     public MovementDtoPageable getMovementsByAccountId(final Pageable pageable, final Long id) {
+        if(!accountServiceImpl.existById(id)) throw new NotFoundException("Account", id);
         final Page<MovementEntity> movementEntities = movementRepository.findByAccountId(id, pageable);
         PageValidationUtil.validatePageNumber(movementEntities, pageable);
 
@@ -77,7 +87,7 @@ public class MovementServiceImpl implements MovementService {
         res.setFromAccountId(accountEntity.getId());
         res.setFromSerialNumber(accountEntity.getSerialNumber());
         res.setFromCurrency(accountEntity.getCurrencyCode());
-        res.setToCurrency(accountEntity.getCurrencyCode());
+        res.setToCurrency(toAccount.getCurrencyCode());
         res.setToAccountId(toAccount.getId());
         res.setToSerialNumber(toAccount.getSerialNumber());
 

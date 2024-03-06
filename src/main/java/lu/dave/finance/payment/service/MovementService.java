@@ -9,4 +9,5 @@ public interface MovementService {
     MovementDtoCreated save(MovementDtoRequest dto);
 
     MovementDtoPageable getMovementsByAccountId(final Pageable pageable, Long id);
+    MovementDtoPageable getAll(final Pageable pageable);
 }

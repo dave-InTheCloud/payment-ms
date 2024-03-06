@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Alert, Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import { useCookies } from 'react-cookie';
+import formatErrorMessage from './ErrorUtils';
 
 const AccountEdit = () => {
   const initialFormState = {
@@ -14,12 +15,14 @@ const AccountEdit = () => {
   const [account, setAccount] = useState(initialFormState);
   const navigate = useNavigate();
   const { id } = useParams();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (id !== 'new') {
       fetch(`/api/accounts/${id}`)
         .then(response => response.json())
-        .then(data => setAccount(data));
+        .then(data => setAccount(data))
+       
     }
   }, [id, setAccount]);
 
@@ -39,10 +42,15 @@ const AccountEdit = () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(account),
-      credentials: 'include'
+    }) .then(response => {
+      if (!response.ok) {
+        throw response.clone();
+      }
+      setAccount(initialFormState);
+      navigate('/accounts');
+    }).catch((error) => {
+      formatErrorMessage(error, setError);
     });
-    setAccount(initialFormState);
-    navigate('/accounts');
   }
 
   const title = <h2>{account.id ? 'Edit Account' : 'Add Account'}</h2>;
@@ -51,6 +59,14 @@ const AccountEdit = () => {
       <AppNavbar/>
       <Container>
         {title}
+        {error && <Alert color="danger">
+        <p><b>Error:</b></p>
+        <ul>
+          {error.split('\n').map((message, index) => (
+            <li key={index}>{message}</li>
+          ))}
+        </ul>
+      </Alert>}
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <Label for="ownerId">Owner id</Label>

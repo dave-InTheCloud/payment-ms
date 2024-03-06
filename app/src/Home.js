@@ -52,7 +52,7 @@ const Home = () => {
           <a href='/docs/index.html'>Asciidoctor</a>
         </ListGroupItem>
         <ListGroupItem>
-          <a href='/docs/pdf.html'>Asciidoctor PDF</a>
+          <a href='/docs/index.pdf'>Asciidoctor PDF</a>
         </ListGroupItem>
         <ListGroupItem>
           <a href='https://github.com/dave-InTheCloud/payment-ms'>GITHUB</a>

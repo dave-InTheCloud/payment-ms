@@ -1,32 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Alert, Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import { useCookies } from 'react-cookie';
+import formatErrorMessage from './ErrorUtils';
 
 const MovementEdit = () => {
   const initialFormState = {
-    ownerId: 1,
-    currencyCode: 'USD',
-    balance: 0.1,
+    fromAccountId: '',
+    toAccountId: '',
+    fromSerialNumber: '',
+    toSerialNumber: '',
+    amount: 0,
   };
 
   const [movement, setMovement] = useState(initialFormState);
   const navigate = useNavigate();
   const { id } = useParams();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (id !== 'new') {
       fetch(`/api/movements/${id}`)
         .then(response => response.json())
-        .then(data => setMovement(data));
+        .then(data => setMovement(data))
     }
   }, [id, setMovement]);
 
   const handleChange = (event) => {
     const { name, value } = event.target
+    debugger
+    if (name === 'fromAccountId') {
+      // Handle both fromAccountId and toAccountId simultaneously
+      setMovement({
+        ...movement,
+        [name]: !isNaN(parseInt(value)) ? parseInt(value) : null, // Set to either integer or original value
+        ['fromSerialNumber']: value, // Clear fromSerialNumber if either account ID changes
+      });
+    } else if (name === 'toAccountId') {
+      setMovement({
+        ...movement,
+        [name]: !isNaN(parseInt(value)) ? parseInt(value) : null, // Set to either integer or original value
+        ['toSerialNumber']: value,   // Clear toSerialNumber for consistency
+      });
+    } else {
+      // Handle other form fields as usual
+      setMovement({ ...movement, [name]: value });
+    }
+    console.log("movement before sending request:", movement);
 
-    setMovement({ ...movement, [name]: value })
   }
 
   const handleSubmit = async (event) => {
@@ -39,35 +61,50 @@ const MovementEdit = () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(movement),
-      credentials: 'include'
+    }).then(response => {
+      if (!response.ok) {
+        throw response.clone();
+      }
+
+      setMovement(initialFormState);
+      navigate('/movements');
+    }).catch((error) => {
+      formatErrorMessage(error, setError);
     });
-    setMovement(initialFormState);
-    navigate('/movements');
   }
 
   const title = <h2>{movement.id ? 'Edit Movement' : 'Add Movement'}</h2>;
 
   return (<div>
-      <AppNavbar/>
-      <Container>
-        {title}
-        <Form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label for="ownerId">Owner id</Label>
-            <Input type="number" name="ownerId" id="ownerId" value={movement.ownerId || ''}
-                   onChange={handleChange} autoComplete="ownerId"/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="currencyCode">Currency</Label>
-            <Input type="text" name="currencyCode" id="currencyCode" value={movement.currencyCode || ''}
-                   onChange={handleChange} autoComplete="currencyCode"/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="balance">Balance</Label>
-            <Input type="number" name="balance" id="balance" value={movement.balance || ''}
-                   onChange={handleChange} autoComplete="balance"/>
-          </FormGroup>
-          {/* <div className="row">
+    <AppNavbar />
+    <Container>
+      {title}
+      {error && <Alert color="danger">
+        <p><b>Error:</b></p>
+        <ul>
+          {error.split('\n').map((message, index) => (
+            <li key={index}>{message}</li>
+          ))}
+        </ul>
+      </Alert>}
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label for="fromAccountId">Source Account</Label>
+          <Input type="text" name="fromAccountId" id="fromAccountId" value={movement.fromAccountId || movement.fromSerialNumber || ''} placeholder='Account ID or serial number'
+            onChange={handleChange} autoComplete="fromAccountId" />
+        </FormGroup>
+        <FormGroup>
+          <Label for="toAccountId">Destination Account</Label>
+          <Input type="text" name="toAccountId" id="toAccountId" value={movement.toAccountId || movement.toSerialNumber || ''} placeholder='Account ID or serial number'
+            onChange={handleChange} autoComplete="toAccountId" />
+        </FormGroup>
+
+        <FormGroup>
+          <Label for="amount">Amount</Label>
+          <Input type="number" name="amount" id="amount" value={movement.amount || ''} placeholder='Amount greater then 0'
+            onChange={handleChange} autoComplete="amount" />
+        </FormGroup>
+        {/* <div className="row">
             <FormGroup className="col-md-4 mb-3">
               <Label for="stateOrProvince">State/Province</Label>
               <Input type="text" name="stateOrProvince" id="stateOrProvince" value={movement.stateOrProvince || ''}
@@ -84,13 +121,13 @@ const MovementEdit = () => {
                      onChange={handleChange} autoComplete="address-level1"/>
             </FormGroup>
           </div> */}
-          <FormGroup>
-            <Button color="primary" type="submit">Save</Button>{' '}
-            <Button color="secondary" tag={Link} to="/movements">Cancel</Button>
-          </FormGroup>
-        </Form>
-      </Container>
-    </div>
+        <FormGroup>
+          <Button color="primary" type="submit">Save</Button>{' '}
+          <Button color="secondary" tag={Link} to="/movements">Cancel</Button>
+        </FormGroup>
+      </Form>
+    </Container>
+  </div>
   )
 };
 

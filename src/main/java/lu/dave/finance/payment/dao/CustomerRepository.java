@@ -14,6 +14,5 @@ public interface CustomerRepository extends PagingAndSortingRepository<CustomerE
         , ListCrudRepository<CustomerEntity, Long> {
     boolean existsCustomerEntityByEmail(String email);
 
-    Page<CustomerEntity> findAll(Pageable pageable);
 
 }

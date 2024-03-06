@@ -35,3 +35,9 @@ build front and run front + back-end:
 ```bash
 mvn -Pnative spring-boot:build-image -Dmaven.test.skip=true
 ```
+
+
+rapsberry 4:
+apt-get install libz-dev
+apt update && sudo apt upgrade
+apt-get install libfreetype-dev

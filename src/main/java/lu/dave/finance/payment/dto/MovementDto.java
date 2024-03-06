@@ -1,8 +1,9 @@
 package lu.dave.finance.payment.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Data
 public class MovementDto extends MovementDtoRequest {
@@ -10,4 +11,5 @@ public class MovementDto extends MovementDtoRequest {
     private String movementType;
     private String status;
     private String currency;
+    private LocalDateTime orderedOn;
 }

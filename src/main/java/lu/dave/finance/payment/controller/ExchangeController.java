@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.money.MonetaryAmount;
+import javax.money.NumberValue;
 import javax.money.convert.CurrencyConversion;
 import javax.money.convert.ExchangeRate;
 import javax.money.convert.ExchangeRateProvider;
@@ -24,10 +25,10 @@ public class ExchangeController {
     private final ExchangeService exchangeServiceImpl;
 
     @Operation(summary = "Default operation", description = "This operation describes your endpoint")
-    @GetMapping("")
-    public ExchangeRate getRate(@RequestParam(name = "fromCurrency") String fromCurrency,
-                                @RequestParam(name = "toCurrency") String  toCurrency){
-        return exchangeServiceImpl.getCurrencyRate(fromCurrency, toCurrency);
+    @GetMapping("/rates")
+    public double getRate(@RequestParam(name = "fromCurrency") String fromCurrency,
+                               @RequestParam(name = "toCurrency") String  toCurrency){
+        return exchangeServiceImpl.getCurrencyRate(fromCurrency, toCurrency).getFactor().doubleValue();
 
     }
     @Operation(summary = "Default operation", description = "This operation describes your endpoint")

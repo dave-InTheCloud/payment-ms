@@ -7,6 +7,7 @@ import lu.dave.finance.payment.exception.BadParameterException;
 import lu.dave.finance.payment.service.AccountService;
 import lu.dave.finance.payment.service.MovementService;
 import lu.dave.finance.payment.util.PageValidationUtil;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class AccountController {
 
 
     @GetMapping("")
-    public List<? extends AccountDto> getAll(@PageableDefault(value = 20, page = 0) Pageable pageable) {
+    public AccountDtoPageable getAll(@PageableDefault(value = 20, page = 0) Pageable pageable) {
         return accountServiceImpl.findAll(pageable);
     }
 

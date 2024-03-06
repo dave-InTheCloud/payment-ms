@@ -9,8 +9,7 @@ const CustomerList = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Page Size and Initial Page
-  const [pageSize, setPageSize] = useState(5); // Customize the number of items per page
+  const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(1);
 
@@ -66,8 +65,8 @@ const CustomerList = () => {
 
   const customerList = customers.map(customer => {
     const allIds = customer.accounts.map((account) => account.id).join(', ');
-debugger
-    return <tr key={customer.id}>
+
+return <tr key={customer.id}>
       <td style={{ whiteSpace: 'nowrap' }}>{customer.id}</td>
       <td>{customer.name}</td>
       <td>{customer.email}</td>
