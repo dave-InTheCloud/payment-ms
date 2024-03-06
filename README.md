@@ -18,6 +18,8 @@ This project demonstrates a native application built with GraalVM, Spring Boot 3
     * http://localhost:8080/docs/index.html (HTML)
     * http://localhost:8080/docs/index.pdf (PDF)
 * **REST API Documentation (Swagger UI):** http://localhost:8080/swagger-ui
+* **DB web console:** http://localhost:8080/h2-console
+* **Monitoring endpoints:** http://localhost:8080/actuator/health
 
 ## Compilation Instructions
 
@@ -28,7 +30,7 @@ This project demonstrates a native application built with GraalVM, Spring Boot 3
 mvn clean install -U
 
 # Build front-end and run both
-mvn ./mvnw spring-boot:run -Pprod
+./mvnw spring-boot:run -Pprod
 ```
 
 ### Local Native Image
