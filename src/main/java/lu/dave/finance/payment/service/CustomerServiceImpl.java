@@ -2,9 +2,11 @@ package lu.dave.finance.payment.service;
 
 import lombok.AllArgsConstructor;
 import lu.dave.finance.payment.dao.CustomerRepository;
-import lu.dave.finance.payment.dto.*;
+import lu.dave.finance.payment.dto.CustomerDto;
+import lu.dave.finance.payment.dto.CustomerDtoPageable;
+import lu.dave.finance.payment.dto.CustomerDtoRequest;
+import lu.dave.finance.payment.dto.PageableDto;
 import lu.dave.finance.payment.entity.CustomerEntity;
-import lu.dave.finance.payment.entity.MovementEntity;
 import lu.dave.finance.payment.exception.BadParameterException;
 import lu.dave.finance.payment.exception.NotFoundException;
 import lu.dave.finance.payment.mapper.CustomerMapper;

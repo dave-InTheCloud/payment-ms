@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class ServletConfig implements WebMvcConfigurer {
 
-    public static final String basePathApi = "/api";
+    public static final String BAS_PATH_API = "/api";
 
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {

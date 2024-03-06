@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import static lu.dave.finance.payment.config.ServletConfig.basePathApi;
+import static lu.dave.finance.payment.config.ServletConfig.BAS_PATH_API;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,7 +47,7 @@ public class AccountControllerTest {
         invalidRequest.setBalance(10.0);
         invalidRequest.setOwnerId(1L);
 
-        mockMvc.perform(post(basePathApi + "/accounts")
+        mockMvc.perform(post(BAS_PATH_API + "/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest))
                 )
@@ -59,7 +59,7 @@ public class AccountControllerTest {
     public void testCreateAccountWithEmptyReq() throws Exception {
         AccountDtoRequest invalidRequest = new AccountDtoRequest();
 
-        mockMvc.perform(post(basePathApi + "/accounts")
+        mockMvc.perform(post(BAS_PATH_API + "/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest))
                 )
@@ -73,7 +73,7 @@ public class AccountControllerTest {
         invalidRequest.setCurrencyCode("USD");
         invalidRequest.setBalance(10.0);
 
-        mockMvc.perform(post(basePathApi + "/accounts")
+        mockMvc.perform(post(BAS_PATH_API + "/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest))
                 )
@@ -88,7 +88,7 @@ public class AccountControllerTest {
         invalidRequest.setBalance(10.0);
         invalidRequest.setOwnerId(1L);
 
-        mockMvc.perform(post(basePathApi + "/accounts")
+        mockMvc.perform(post(BAS_PATH_API + "/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest))
                 )
@@ -103,7 +103,7 @@ public class AccountControllerTest {
         AccountDtoRequest invalidRequest = new AccountDtoRequest();
         invalidRequest.setCurrencyCode("USD");
 
-        mockMvc.perform(post(basePathApi + "/accounts")
+        mockMvc.perform(post(BAS_PATH_API + "/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest))
                 )
@@ -120,7 +120,7 @@ public class AccountControllerTest {
         invalidRequest.setBalance(-10.0);
         invalidRequest.setOwnerId(1L);
 
-        mockMvc.perform(post(basePathApi + "/accounts")
+        mockMvc.perform(post(BAS_PATH_API + "/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest))
                 )

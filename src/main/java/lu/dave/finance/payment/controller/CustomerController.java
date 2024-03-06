@@ -12,11 +12,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import static lu.dave.finance.payment.config.ServletConfig.basePathApi;
+import static lu.dave.finance.payment.config.ServletConfig.BAS_PATH_API;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(basePathApi + "/customers")
+@RequestMapping(BAS_PATH_API + "/customers")
 public class CustomerController {
 
     private final CustomerService customerServiceImpl;

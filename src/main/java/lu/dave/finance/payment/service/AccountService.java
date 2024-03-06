@@ -5,7 +5,6 @@ import lu.dave.finance.payment.dto.AccountDtoPageable;
 import lu.dave.finance.payment.dto.AccountDtoRequest;
 import lu.dave.finance.payment.dto.AccountDtoWithCustomer;
 import lu.dave.finance.payment.entity.AccountEntity;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

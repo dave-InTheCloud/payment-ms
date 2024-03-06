@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static lu.dave.finance.payment.config.ServletConfig.basePathApi;
+import static lu.dave.finance.payment.config.ServletConfig.BAS_PATH_API;
 
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(basePathApi+"/currencies")
+@RequestMapping(BAS_PATH_API +"/currencies")
 public class ExchangeController {
 
     private final ExchangeService exchangeServiceImpl;

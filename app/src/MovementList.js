@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Col, Container, Input, Label, Pagination, PaginationItem, PaginationLink, Row, Table, Tooltip } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import { Link } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 
 const MovementList = () => {
 

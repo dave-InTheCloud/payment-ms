@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Col, Container, Input, Label, Pagination, PaginationItem, PaginationLink, Row, Table, Tooltip } from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import { Link } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 
 const AccountList = () => {
 
@@ -63,7 +62,6 @@ const AccountList = () => {
 
   const accountList = accounts.map(account => {
 
-    //const address = `${account.address || ''} ${account.city || ''} ${account.stateOrProvince || ''}`;
     return <tr key={account.id}>
       <td style={{ whiteSpace: 'nowrap' }}>{account.id}</td>
       <td style={{ whiteSpace: 'nowrap' }}>{account.name}</td>
@@ -71,13 +69,6 @@ const AccountList = () => {
       <td>{account.type}</td>
       <td>{account.currencyCode}</td>
       <td>{account.balance}</td>
-      {/* <td>{account.events.map(event => {
-        return <div key={event.id}>{new Intl.DateTimeFormat('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: '2-digit'
-        }).format(new Date(event.date))}: {event.title}</div>
-      })}</td> */}
       <td>
         <ButtonGroup id='action'>
           <Button size="sm" color="primary" disabled tag={Link} to={"/accounts/" + account.id}>Edit</Button>

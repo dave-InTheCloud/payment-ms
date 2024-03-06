@@ -1,7 +1,6 @@
 package lu.dave.finance.payment.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

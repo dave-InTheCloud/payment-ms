@@ -14,11 +14,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import static lu.dave.finance.payment.config.ServletConfig.basePathApi;
+import static lu.dave.finance.payment.config.ServletConfig.BAS_PATH_API;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(basePathApi + "/movements")
+@RequestMapping(BAS_PATH_API + "/movements")
 public class MovementController {
 
     private final MovementService movementServiceImpl;
