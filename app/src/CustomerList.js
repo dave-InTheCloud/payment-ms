@@ -26,6 +26,8 @@ const CustomerList = () => {
       .then(data => {
         setCustomers(data.customers);
         setTotalPage(data.page.totalPage);
+        debugger
+        if (currentPage >= data.page.totalPage) setCurrentPage(data.page.totalPage - 1);
         setLoading(false);
       })
 

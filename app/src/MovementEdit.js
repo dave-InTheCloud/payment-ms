@@ -28,7 +28,6 @@ const MovementEdit = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target
-    debugger
     if (name === 'fromAccountId') {
       // Handle both fromAccountId and toAccountId simultaneously
       setMovement({
