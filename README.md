@@ -1,43 +1,51 @@
-# payment-ms
-demo of a payement microservice for spring-boot 3 native application 
+# Payment Microservice
 
-## Documentation
+This project demonstrates a native application built with GraalVM, Spring Boot 3, and React for currency exchange and transfer functionalities.
 
-http://localhost:8080/docs/index.html
+**Executables:**
 
-http://localhost:8080/swagger-ui
+* Download pre-built executables from [here](https://drive.google.com/drive/folders/1C2MaGHbeWRAo40la6neMqcKMGIk-WT9s?usp=drive_link).
+* If the executables are unavailable, follow the compilation instructions below.
 
-## Compilation
+**Running the Application from Server (if executables are unavailable):**
 
-Local Native image :
+* Access the application from a web browser at the provided server [URL](https://payment.daveinthecloud.wiki/).
+
+## Application URLs (when running locally):
+
+* **Front-end:** http://localhost:8080/
+* **Business Documentation (AsciiDoc):**
+    * http://localhost:8080/docs/index.html (HTML)
+    * http://localhost:8080/docs/index.pdf (PDF)
+* **REST API Documentation (Swagger UI):** http://localhost:8080/swagger-ui
+
+## Compilation Instructions
+
+### Classic JAR Build (Frontend + Backend - for Development):
 
 ```bash
-# first time only 
-sdk install java 22.3.r17-nik
-sdk use java 22.3.r17-nik
-
-# after any changes
-mvn clean install -U  -Dmaven.test.skip=true
-mvn clean package -Pnative -Dmaven.test.skip=true
-mvn -Pnative native:compile -Dmaven.test.skip=true
-```
-
-
-Docker native image :
-```bash
-# Docker need to be running
+# Build back-end
 mvn clean install -U
-mvn clean package -Pnative -Dmaven.test.skip=true
-mvn -Pnative spring-boot:build-image -Dmaven.test.skip=true
+
+# Build front-end and run both
+mvn ./mvnw spring-boot:run -Pprod
 ```
 
-build front and run front + back-end: 
-```bash
-mvn -Pnative spring-boot:build-image -Dmaven.test.skip=true
-```
+### Local Native Image
 
+**Requirements:**
 
-rapsberry 4:
-apt-get install libz-dev
-apt update && sudo apt upgrade
-apt-get install libfreetype-dev
+* **Windows:** Install GraalVM JDK from https://www.graalvm.org/latest/docs/getting-started/.
+* **Linux:** Install Java 22.3.r17-nik using SDKMAN: https://sdkman.io/
+
+**Instructions:**
+
+1. **After any changes:**
+    ```bash
+    mvn clean package -Pprod -Pnative -Dmaven.test.skip=true
+    ```
+
+2. **Compile the native image:**
+    ```bash
+    mvn -Pnative native:compile -Dmaven.test.skip=true
+    ```

@@ -8,12 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.money.MonetaryAmount;
-import javax.money.NumberValue;
-import javax.money.convert.CurrencyConversion;
-import javax.money.convert.ExchangeRate;
-import javax.money.convert.ExchangeRateProvider;
-
 import static lu.dave.finance.payment.config.ServletConfig.basePathApi;
 
 
@@ -24,19 +18,19 @@ public class ExchangeController {
 
     private final ExchangeService exchangeServiceImpl;
 
-    @Operation(summary = "Default operation", description = "This operation describes your endpoint")
+    @Operation(summary = "Get the rate from one currency to another")
     @GetMapping("/rates")
     public double getRate(@RequestParam(name = "fromCurrency") String fromCurrency,
                                @RequestParam(name = "toCurrency") String  toCurrency){
         return exchangeServiceImpl.getCurrencyRate(fromCurrency, toCurrency).getFactor().doubleValue();
 
     }
-    @Operation(summary = "Default operation", description = "This operation describes your endpoint")
+    @Operation(summary = "Convert amount from one currency to another")
     @GetMapping("/convert")
     public Double convert(@RequestParam(name = "fromCurrency") String fromCurrency,
                                   @RequestParam(name = "toCurrency") String  toCurrency,
                                   @RequestParam(name = "amount") Double amount){
-        return exchangeServiceImpl.convertAmount(fromCurrency, toCurrency, amount).getNumber().doubleValue();
+        return exchangeServiceImpl.convertAmount(fromCurrency, toCurrency, amount);
     }
 
 }

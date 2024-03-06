@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.MonetaryException;
-import javax.money.convert.*;
-import java.net.UnknownHostException;
+import javax.money.convert.CurrencyConversion;
+import javax.money.convert.ExchangeRate;
+import javax.money.convert.ExchangeRateProvider;
+import javax.money.convert.MonetaryConversions;
 
 @AllArgsConstructor
 @Service
@@ -19,12 +21,11 @@ public class ExchangeServiceImpl implements ExchangeService {
     public static final String SERVICE_UNAVAILABLE = "The currency or the service is unavailable";
     private static final String[] PROVIDERS = {"ECB"};
 
-    public CurrencyConversion getCurrencyRateConversion(final String currency) {
+    private CurrencyConversion getCurrencyRateConversion(final String currency) {
         try {
             MonetaryConversions.isConversionAvailable(currency, PROVIDERS);
             ExchangeRateProvider rateProvider = MonetaryConversions.getExchangeRateProvider(PROVIDERS);
-            CurrencyConversion conversion = rateProvider.getCurrencyConversion(currency);
-            return conversion;
+            return rateProvider.getCurrencyConversion(currency);
         } catch (Exception e) {
             throw new ServiceUnvailableException(SERVICE_UNAVAILABLE);
         }
@@ -53,14 +54,14 @@ public class ExchangeServiceImpl implements ExchangeService {
         }
     }
 
-    public MonetaryAmount convertAmount(final String fromCurrency, final String toCurrency, final Double fromAmount) {
+    public Double convertAmount(final String fromCurrency, final String toCurrency, final Double fromAmount) {
         String error = String.format("Conversion failed or service not available %s to %S", fromCurrency, toCurrency);
         try {
             Money fromAmountWithCurr = Money.of(fromAmount, fromCurrency);
             CurrencyConversion conversion = getCurrencyRateConversion(toCurrency);
             // Perform conversion using exchange rates
             MonetaryAmount convertedAmount = fromAmountWithCurr.with(conversion);
-            return convertedAmount;
+            return convertedAmount.getNumber().doubleValue();
         } catch (MonetaryException e) {
             throw new BadParameterException(error);
         } catch (Exception e) {

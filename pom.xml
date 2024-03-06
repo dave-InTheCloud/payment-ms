@@ -131,18 +131,6 @@
     </dependencies>
 
     <build>
-        <!--		<pluginManagement>-->
-        <!--			<plugins>-->
-        <!--				<plugin>-->
-        <!--					<groupId>org.graalvm.buildtools</groupId>-->
-        <!--					<artifactId>native-maven-plugin</artifactId>-->
-        <!--					<configuration>-->
-        <!--						<skipNativeTests>true</skipNativeTests>-->
-        <!--					</configuration>-->
-        <!--				</plugin>-->
-        <!--			</plugins>-->
-        <!--		</pluginManagement>-->
-
         <plugins>
             <plugin>
                 <groupId>org.hibernate.orm.tooling</groupId>
@@ -189,7 +177,7 @@
                         </goals>
                         <configuration>
                             <backend>html</backend>
-                            <doctype>book</doctype>
+<!--                            <doctype>book</doctype>-->
                         </configuration>
                     </execution>
                     <execution>
@@ -200,7 +188,7 @@
                         </goals>
                         <configuration>
                             <backend>pdf</backend>
-                            <doctype>book</doctype>
+<!--                            <doctype>book</doctype>-->
                         </configuration>
                     </execution>
                 </executions>

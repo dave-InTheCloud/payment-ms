@@ -1,28 +1,27 @@
 package lu.dave.finance.payment.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import lu.dave.finance.payment.dto.AccountDtoWithCustomer;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import lu.dave.finance.payment.dao.AccountRepository;
 import lu.dave.finance.payment.dto.AccountDto;
 import lu.dave.finance.payment.dto.AccountDtoRequest;
+import lu.dave.finance.payment.dto.AccountDtoWithCustomer;
 import lu.dave.finance.payment.entity.AccountEntity;
 import lu.dave.finance.payment.entity.CustomerEntity;
 import lu.dave.finance.payment.entity.enumaration.AccountType;
 import lu.dave.finance.payment.exception.NotFoundException;
 import lu.dave.finance.payment.mapper.AccountMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 public class AccountServiceImplTest {
 
@@ -43,6 +42,32 @@ public class AccountServiceImplTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testSave_ShouldSaveAndThrowBadParam() {
+        // Mock behavior
+        AccountDtoRequest request = new AccountDtoRequest();
+        request.setName("name");
+        request.setCurrencyCode("EUR");
+        CustomerEntity customer = new CustomerEntity();
+        customer.setId(1L);
+        customer.setName("John Doe");
+        customer.setEmail("john.doe@example.com");
+        AccountEntity account = new AccountEntity();
+        account.setName(request.getName());
+        account.setType(AccountType.PORTFOLIO); // Set type directly instead of using builder
+        account.setCustomer(customer); // Set customer directly
+        when(customerService.findById(request.getOwnerId())).thenReturn(customer);
+        when(conversionService.convert(request, AccountEntity.class)).thenReturn(account);
+        when(accountRepository.save(account)).thenReturn(account);
+        when(accountMapperImpl.convertWithChildren(account)).thenReturn(new AccountDtoWithCustomer()); // Mock converted DTO
+        when(exchangeServiceImpl.isCurrencyAvailable("EUR")).thenReturn(true);
+        // Call the method
+        AccountDto savedDto = accountService.save(request);
+
+        // Assertions
+        assertNotNull(savedDto);
     }
 
     @Test

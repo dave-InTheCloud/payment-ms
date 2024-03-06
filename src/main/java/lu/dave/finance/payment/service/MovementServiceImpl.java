@@ -2,7 +2,10 @@ package lu.dave.finance.payment.service;
 
 import lombok.AllArgsConstructor;
 import lu.dave.finance.payment.dao.MovementRepository;
-import lu.dave.finance.payment.dto.*;
+import lu.dave.finance.payment.dto.MovementDtoCreated;
+import lu.dave.finance.payment.dto.MovementDtoPageable;
+import lu.dave.finance.payment.dto.MovementDtoRequest;
+import lu.dave.finance.payment.dto.PageableDto;
 import lu.dave.finance.payment.entity.AccountEntity;
 import lu.dave.finance.payment.entity.MovementEntity;
 import lu.dave.finance.payment.entity.enumaration.MovementStatus;
@@ -13,7 +16,6 @@ import lu.dave.finance.payment.mapper.MovementMapper;
 import lu.dave.finance.payment.util.PageValidationUtil;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -60,7 +62,7 @@ public class MovementServiceImpl implements MovementService {
                 : accountServiceImpl.findBySerialNumber(dto.getToSerialNumber());
 
         Double convertedAmount = exchangeServiceImpl.convertAmount(fromAccount.getCurrencyCode(),
-                toAccount.getCurrencyCode(), dto.getAmount()).getNumber().doubleValue();
+                toAccount.getCurrencyCode(), dto.getAmount());
 
         return this.executeTransaction(dto, fromAccount, toAccount, convertedAmount);
     }
@@ -96,7 +98,7 @@ public class MovementServiceImpl implements MovementService {
 
     private MovementDtoCreated executeTransaction(final MovementDtoRequest movementDtoReq, final AccountEntity fromAccount,
                                                   AccountEntity toAccount, final Double convertedAmount) {
-        CheckTransactionRules(movementDtoReq, fromAccount, toAccount, convertedAmount);
+        checkTransactionRules(fromAccount, toAccount, convertedAmount);
 
         fromAccount.setBalance(fromAccount.getBalance() - movementDtoReq.getAmount());
         toAccount.setBalance(toAccount.getBalance() + convertedAmount);
@@ -118,7 +120,7 @@ public class MovementServiceImpl implements MovementService {
     }
 
 
-    private static void CheckTransactionRules(MovementDtoRequest movementDtoReq, final AccountEntity fromAccount, final AccountEntity toAccount, final Double amount) {
+    private static void checkTransactionRules(final AccountEntity fromAccount, final AccountEntity toAccount, final Double amount) {
         if (fromAccount.getId().equals(toAccount.getId()))
             throw new BadParameterException("You cannot transfer fund from the same account");
 

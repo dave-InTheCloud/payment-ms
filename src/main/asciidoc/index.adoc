@@ -1,22 +1,54 @@
-= The Intrepid Chronicles
-Kismet Lee; B. Steppenwolf; Pax Draeke
+= Currency Exchange and Transfer REST-API
+:author: David Lambiase
+:pdf: link:index.pdf[index.pdf]
+:icons: font
 :toc:
+:toclevels: 1
+:numbered:
+:hide-uri-scheme:
+:title-page:
 
-== Certain Peril
+This document introduces a project aiming to develop a **RESTful API** that facilitates **fund transfers between accounts** with **currency exchange** capabilities. It caters to individuals and businesses requiring seamless international transactions.
 
-Daylight trickles across the cobblestones...
+**GitHub**: https://github.com/dave-InTheCloud/payment-ms
 
-=== A Recipe for Potion
+== Key Functionalities
+* Transfer funds between accounts holding different currencies.
+* Retrieve exchange rates from external APIs for accurate conversion.
+* Handle various currencies using standardized codes (e.g., USD, EUR, JPY).
+* Ensure secure and reliable transactions through robust implementation.
 
-We have to harvest the leaves by the light of the teal moons...
+== Technical Stack
 
-==== Searching for Ginseng
+* Spring Boot 3 native (Java) web framework producing native application bytecode
+* Flyway, Spring Data JPA, and H2 for database migration and access
+* Asciidoctor and Swagger for documentation
+* MapStruct, Jackson, and Lombok for back-end data binding
+* Actuator for monitoring
+* React for the front-end
 
-Crawling through the twisted understory...
+== Target Audience
 
-== Dawn on the Plateau
+* Individuals requiring international money transfers with currency conversion.
+* Businesses conducting international transactions and managing foreign currency accounts.
 
-Hanging from...
+== Benefits
 
+* Simplified and efficient international money transfer process.
+* Automatic currency conversion based on real-time exchange rates.
+* Reduced complexity for managing multiple currencies in different accounts.
 
-include::test.adoc[]
+== Project Priorities
+
+* User-friendliness: Providing a clear and intuitive API for easy integration.
+* Security: Implementing robust measures to safeguard sensitive information and transactions.
+* Scalability: Designing the application to handle increasing demand and transaction volume.
+
+== Next Steps
+
+* Detailed API design and documentation.
+* Implementation using the Spring Boot framework and Java/Kotlin.
+* Unit and integration testing for functionality and error handling.
+* Deployment as a runnable JAR file for easy access and usage.
+
+This project offers a valuable solution for individuals and businesses seeking a convenient and efficient way to conduct international financial transactions with automatic currency exchange capabilities.
