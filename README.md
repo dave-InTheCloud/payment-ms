@@ -7,7 +7,7 @@ This project demonstrates a native application built with GraalVM, Spring Boot 3
 * Download pre-built executables from [here](https://drive.google.com/drive/folders/1C2MaGHbeWRAo40la6neMqcKMGIk-WT9s?usp=drive_link).
 * If the executables are unavailable, follow the compilation instructions below.
 
-**Running the Application from Server (if executables are unavailable):**
+**Deployed version:**
 
 * Access the application from a web browser at the provided server [URL](https://payment.daveinthecloud.wiki/).
 
