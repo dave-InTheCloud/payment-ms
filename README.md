@@ -2,10 +2,10 @@
 
 This project demonstrates a native application built with GraalVM, Spring Boot 3, and React for currency exchange and transfer functionalities.
 
+## Try it
 **Executables:**
 
 * Download pre-built executables from [here](https://drive.google.com/drive/folders/1C2MaGHbeWRAo40la6neMqcKMGIk-WT9s?usp=drive_link).
-* If the executables are unavailable, follow the compilation instructions below.
 
 **Deployed version:**
 
