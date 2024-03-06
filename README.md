@@ -42,12 +42,25 @@ mvn clean install -U
 
 **Instructions:**
 
-1. **After any changes:**
+1. **After changes:**
     ```bash
     mvn clean package -Pprod -Pnative -Dmaven.test.skip=true
     ```
 
 2. **Compile the native image:**
     ```bash
-    mvn -Pnative native:compile -Dmaven.test.skip=true
+    mvn -Pprod -Pnative native:compile -Dmaven.test.skip=true
     ```
+
+### Docker native image :
+* requirements docker installed
+
+```bash
+mvn clean package -Pprod -Pnative -Dmaven.test.skip=true
+mvn -Pprod -Pnative spring-boot:build-image -Dmaven.test.skip=true
+```
+
+**Required dependencies for raspberry 4 native compilation:**
+* apt-get install libz-dev
+* apt update && sudo apt upgrade
+* apt-get install libfreetype-dev
