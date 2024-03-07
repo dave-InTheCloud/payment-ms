@@ -47,7 +47,7 @@ public class AccountController {
 
     @GetMapping("/{id}/movements")
     @Operation(summary = "Get movements of an account by id")
-    public MovementDtoPageable getMovementsByAccountId(@PageableDefault(value = 20, page = 0) Pageable pageable,
+    public MovementDtoPageable getMovementsByAccountId(@PageableDefault(value = 20, page = 0, sort = "id") Pageable pageable,
                                                        @PathVariable Long id) {
         PageValidationUtil.pageIsNegative(pageable);
         return movementServiceImpl.getMovementsByAccountId(pageable, id);

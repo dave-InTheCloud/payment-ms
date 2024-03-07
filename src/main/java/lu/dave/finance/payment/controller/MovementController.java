@@ -25,7 +25,7 @@ public class MovementController {
 
     @GetMapping("")
     @Operation(summary = "Get all the movements", description = "Returns a list of movements with page object")
-    public MovementDtoPageable getAll(@PageableDefault(value = 20, page = 0)  Pageable pageable) {
+    public MovementDtoPageable getAll(@PageableDefault(value = 20, page = 0, sort = "id")  Pageable pageable) {
         //TODO: USE RSSQL would be better for search and optional request Param (not enough time)
         /**
          @RequestParam(required = false) long fromAccountId, @RequestParam(required = false) long toAccountId,
