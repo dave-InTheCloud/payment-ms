@@ -21,6 +21,24 @@ This project demonstrates a native application built with GraalVM, Spring Boot 3
 * **DB web console:** http://localhost:8080/h2-console (jdbc:h2:mem:testdb  user: spaceFan pwd: spaceFan)
 * **Monitoring endpoints:** http://localhost:8080/actuator/health
 
+## Technical Stack
+
+**Back-end:**
+
+* **Spring Boot 3 native (Java) web framework producing native application bytecode** with GraalVM support for potential AOT compilation and native image generation.
+* **Flyway + Spring Data JPA + H2 for database migration and access**
+* **Asciidoctor and Swagger for documentation**
+* **MapStruct, Jackson, and Lombok for back-end data binding**
+* **Actuator for monitoring**
+
+**Front-end:**
+
+* **React:** Popular JavaScript library for building dynamic and user-friendly interfaces.
+
+**GraalVM:**
+
+* **Optional:** GraalVM can be used for AOT compilation and native image generation of the Spring Boot application, potentially improving performance and startup time.
+
 ## Compilation Instructions
 
 ### Classic JAR Build (Frontend + Backend - for Development):
