@@ -30,6 +30,7 @@ This project demonstrates a native application built with GraalVM, Spring Boot 3
 * **Asciidoctor and Swagger for documentation**
 * **MapStruct, Jackson, and Lombok for back-end data binding**
 * **Actuator for monitoring**
+* **Moneta JSR 354 for currency exchange base en ECB european central bank**
 
 **Front-end:**
 
