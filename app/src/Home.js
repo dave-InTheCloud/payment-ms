@@ -74,7 +74,12 @@ const Home = () => {
           <a href="/actuator/health">Health actuator endpoint</a>
         </ListGroupItem>
         <ListGroupItem>
-          <a href="/h2-console">Manage DB (H2 console password: spaceFan)</a>
+          <a href="/h2-console">Manage DB (H2 console)</a>
+          <p>
+           url:   jdbc:h2:mem:testdb <br/>
+           user:  spaceFan  <br/>
+           password:  spaceFan
+          </p>
         </ListGroupItem>
       </ListGroup>
     </Card>

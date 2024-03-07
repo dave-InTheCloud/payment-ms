@@ -18,7 +18,7 @@ This project demonstrates a native application built with GraalVM, Spring Boot 3
     * http://localhost:8080/docs/index.html (HTML)
     * http://localhost:8080/docs/index.pdf (PDF)
 * **REST API Documentation (Swagger UI):** http://localhost:8080/swagger-ui
-* **DB web console:** http://localhost:8080/h2-console
+* **DB web console:** http://localhost:8080/h2-console (jdbc:h2:mem:testdb  user: spaceFan pwd: spaceFan)
 * **Monitoring endpoints:** http://localhost:8080/actuator/health
 
 ## Compilation Instructions
