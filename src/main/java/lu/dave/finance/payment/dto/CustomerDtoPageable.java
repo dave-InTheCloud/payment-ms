@@ -9,6 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class CustomerDtoPageable {
-    List<? extends CustomerDto> customers;
+    List<CustomerDtoWithAccount> customers;
     PageableDto page;
 }

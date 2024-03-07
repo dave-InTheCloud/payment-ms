@@ -2,10 +2,7 @@ package lu.dave.finance.payment.service;
 
 import lombok.AllArgsConstructor;
 import lu.dave.finance.payment.dao.CustomerRepository;
-import lu.dave.finance.payment.dto.CustomerDto;
-import lu.dave.finance.payment.dto.CustomerDtoPageable;
-import lu.dave.finance.payment.dto.CustomerDtoRequest;
-import lu.dave.finance.payment.dto.PageableDto;
+import lu.dave.finance.payment.dto.*;
 import lu.dave.finance.payment.entity.CustomerEntity;
 import lu.dave.finance.payment.exception.BadParameterException;
 import lu.dave.finance.payment.exception.NotFoundException;
@@ -43,10 +40,9 @@ public class CustomerServiceImpl implements CustomerService {
         final Page<CustomerEntity> customerEntityPage = customerRepository.findAll(pageable);
         PageValidationUtil.validatePageNumber(customerEntityPage, pageable);
 
-       return new CustomerDtoPageable( customerMapper.convert(customerEntityPage.getContent()),
+       return new CustomerDtoPageable(customerMapper.convert(customerEntityPage.getContent()),
                new PageableDto(customerEntityPage));
     }
-
 
     public CustomerEntity findById(Long id) {
         return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("customer", id));
