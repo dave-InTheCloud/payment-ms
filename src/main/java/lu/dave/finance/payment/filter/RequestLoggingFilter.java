@@ -21,6 +21,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
             throws ServletException, java.io.IOException {
         // Log request details (method, URI, headers, etc.)
         log.info("Request: {} {}", request.getMethod(), request.getRequestURI());
+        log.info("Response: {}", response.getStatus());
         filterChain.doFilter(request, response);
     }
 }
