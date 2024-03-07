@@ -1,0 +1,356 @@
+{
+	"info": {
+		"_postman_id": "7f3a3a92-857a-4d00-801b-bd8e9e05315c",
+		"name": "PaymentService",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "Accounts create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currencyCode\": \"USD\",\n    \"ownerId\": 1 ,\n    \"balance\": 10.55\n}\n\n// \"serialNumber\" : optional",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/accounts",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accounts  findBy ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/accounts/1",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"accounts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accounts read all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/accounts?page=0&size=5",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"accounts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accounts  Movements findByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/accounts/1/movements?size=1&page=0",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"accounts",
+								"1",
+								"movements"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "Customers read all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/customers?page=0&size=5",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customers create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"ExcelentSoftwareEngineer\",\n    \"email\": \"slimshad@software.com\",\n    \"dateOfBirth\": \"1995-01-21\" \n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/customers",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movements",
+			"item": [
+				{
+					"name": "Movements create by serial number",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fromSerialNumber\" : \"USl5lQM9RmoSgnIe1WC361\",\n    \"toSerialNumber\": \"USaGz9oOxdn17664gc25Fz\", \n    \"amount\": 0.01\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/movements",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"movements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Movements create by id",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fromAccountId\": 1,\n    \"toAccountId\": 4,\n    \"amount\": 0.1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/movements",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"movements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Movement read all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/movements",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"movements"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exchange",
+			"item": [
+				{
+					"name": "Convert amount",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/currencies/convert?fromCurrency=USD&toCurrency=EUR&amount=10",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"currencies",
+								"convert"
+							],
+							"query": [
+								{
+									"key": "fromCurrency",
+									"value": "USD"
+								},
+								{
+									"key": "toCurrency",
+									"value": "EUR"
+								},
+								{
+									"key": "amount",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exchange Rates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{method}}://{{host}}:{{port}}/{{base_api}}/currencies/rates?fromCurrency=USD&toCurrency=EUR",
+							"protocol": "{{method}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"{{base_api}}",
+								"currencies",
+								"rates"
+							],
+							"query": [
+								{
+									"key": "fromCurrency",
+									"value": "USD"
+								},
+								{
+									"key": "toCurrency",
+									"value": "EUR"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
