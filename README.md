@@ -45,9 +45,10 @@ This project demonstrates a native application built with GraalVM, Spring Boot 3
 
 ```bash
 # Build back-end
-mvn clean install -U
+mvn clean install
+
 # Build back-end and front-end
-mvn clean install -U -Pprod
+mvn clean install -Pprod
 
 # Build front-end and run both
 ./mvnw spring-boot:run -Pprod
