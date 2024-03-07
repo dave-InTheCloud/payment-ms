@@ -1,16 +1,19 @@
 package lu.dave.finance.payment.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
+@Slf4j
 @Controller
+@Hidden
 public class UiController {
-
     @RequestMapping(value = "/{path:[^\\.]*}")
-    public String redirect() {
+    public String redirect(HttpServletRequest request) {
+        log.warn("redirect ot index.html, No proper router for SPA," +
+                " could have side effect check url :  {}", request.getRequestURI());
         return "forward:/";
     }
 }
